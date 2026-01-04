@@ -10,4 +10,11 @@ public class PostItem {
         this.author = author;
     }
 
+    public PostModel getPost() {return post;}
+    public void setPost(PostModel post) {this.post = post;}
+
+    public PostAuthor getAuthor() {return author;}
+    public void setAuthor(PostAuthor author) {this.author = author;}
+
+
 }
