@@ -1,9 +1,12 @@
 package processor;
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import DAO.PostDAO;
 import DAO.UserDAO;
 import org.springframework.stereotype.Service; // Spring Bootにコンポーネントであることを教える
 import processor.api_model.FeedResponse;
-import processor.api_model.PostItem;
+import processor.api_model.PostItemJson;
 // Spring Frameworkにおいて「ビジネスロジック（業務処理）」を担当するクラスであることを示すための目印です。
 // 1. 主な役割
 // ビジネスロジックの記述: 「データの計算」「複数のリポジトリを組み合わせた処理」「外部APIとの連携」など、
@@ -45,17 +48,23 @@ public class BlueskyDataProcessor {
 
 
     public void processFeed (String jsonText){
-        // 1. JSONパース responseはPostItemのリストとcursorを持つ
+        // 1. JSONパース FeedResponseはPostItemJsonのリストとcursorを持つ
         FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
 
-        // 2. 投稿リストのループ処理 itemはauthorとpostを持つ
-        for (PostItem item : response.getFeed()) {
+        // 2. 投稿リストのループ処理 PostItemJsonはRecofdJsonとAuthorJsonを持つ
+        for (PostItemJson item : response.getFeed()) {
             // ユーザー情報の抽出
             String did = item.getAuthor().getDid();
             String handle = item.getAuthor().getHandle();
             String displayName = item.getAuthor().getDisplayName();
             //ポスト情報
-            
+            ZonedDateTime createdAt = item.getPost().getCreatedAt();
+            List<String> langs = item.getPost().getLangs();
+            String text = item.getPost().getText();
+            int replyCount = item.getPost().getReplyCount();
+            int repostCount = item.getPost().getRepostCount();
+            int likeCount = item.getPost().getLikeCount();
+
 
 
             // ★ユーザーの存在チェックと格納（UserDAOのメソッドを使って）
@@ -63,7 +72,7 @@ public class BlueskyDataProcessor {
             
             // if ( /* UserDAOのメソッドでユーザーが存在しない場合 */ ) {
             //     // 新しいユーザーを作成・格納するロジック
-            // }
+            }
 
         }
 
