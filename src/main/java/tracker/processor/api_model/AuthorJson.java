@@ -1,4 +1,4 @@
-package processor.api_model;
+package tracker.processor.api_model;
 
 public class AuthorJson {
     private String did;

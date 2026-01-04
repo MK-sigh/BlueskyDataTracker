@@ -1,18 +1,18 @@
-package processor;
+package tracker.processor;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import DAO.PostDAO;
-import DAO.UserDAO;
-import model.Post;
-import model.User;
 import org.springframework.stereotype.Service; // Spring Bootにコンポーネントであることを教える
 import org.springframework.transaction.annotation.Transactional;
-import processor.api_model.FeedResponse;
-import processor.api_model.ItemFeedJson;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
+import tracker.DAO.PostDAO;
+import tracker.DAO.UserDAO;
+import tracker.model.Post;
+import tracker.model.User;
+import tracker.processor.api_model.FeedResponse;
+import tracker.processor.api_model.ItemFeedJson;
 
 @Service // このクラスをSpringが管理するコンポーネントとしてマーク
 public class BlueskyDataProcessor {

@@ -1,4 +1,4 @@
-package client;
+package tracker.client;
 
 import java.io.IOException;
 

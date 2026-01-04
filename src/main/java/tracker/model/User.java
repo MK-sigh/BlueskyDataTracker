@@ -1,7 +1,17 @@
-package model;
+package tracker.model;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.time.ZonedDateTime;
 
+@Entity // ★Userクラスがデータベースのエンティティであることを示す
+@Table(name = "users") // ★テーブル名を指定（省略可能だが明示を推奨）
 public class User {
+    @Id // ★主キーであることを示す
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // ★DBのSERIAL（連番）に対応
     private int id;
     private String did;
     private String handle;

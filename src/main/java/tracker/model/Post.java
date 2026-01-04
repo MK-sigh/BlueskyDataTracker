@@ -1,7 +1,17 @@
-package model;
+package tracker.model;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.time.ZonedDateTime;
 
+@Entity
+@Table (name = "posts")
 public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id; // SERIAL PRIMARY KEY に対応
     private String uri;
     private String cid;

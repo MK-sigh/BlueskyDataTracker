@@ -1,11 +1,11 @@
-package scheduler;
+package tracker.scheduler;
 
 import java.io.IOException;
 
-import client.BlueskyApiClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import processor.BlueskyDataProcessor;
+import tracker.client.BlueskyApiClient;
+import tracker.processor.BlueskyDataProcessor;
 
 @Service
 public class FeedScheduler {

@@ -1,6 +1,5 @@
-package DAO;
+package tracker.DAO;
 
-import model.Post;
 import org.springframework.data.repository.CrudRepository;
 // CrudRepositoryをインポート
 // データベースの基本操作（CRUD）を自動化するためのインターフェースです。
@@ -12,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 // findAll() : 全件取得
 // count() : データ件数の取得
 // deleteById(id) : IDを指定して削除
+import tracker.model.Post;
 
 // ★Postエンティティと主キーの型（Integer）を指定して継承するだけでOK
 public interface PostDAO extends CrudRepository<Post, Integer> {

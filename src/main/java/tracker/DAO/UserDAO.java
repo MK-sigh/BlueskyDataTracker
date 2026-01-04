@@ -1,8 +1,8 @@
-package DAO;
+package tracker.DAO;
 import java.util.Optional;
 
-import model.User;
 import org.springframework.data.repository.CrudRepository;
+import tracker.model.User;
 
 
 public interface UserDAO extends CrudRepository <User, Integer> {
