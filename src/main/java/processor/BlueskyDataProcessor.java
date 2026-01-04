@@ -14,21 +14,36 @@ import org.springframework.stereotype.Service; // Spring Bootにコンポーネ�
 // Controller (@RestController): 画面やAPIの窓口。リクエストを受け取り、Serviceを呼ぶ。
 // Service (@Service): ここ！ 窓口から届いたデータを使って、実際の処理（計算や判定など）を行う。
 // Repository (@Repository / CrudRepository): データベースとのやり取りだけを行う。
+import tools.jackson.databind.ObjectMapper;
+// 「JavaオブジェクトとJSONを相互変換するライブラリ」 です。
+// 1. 主な役割（2つの変換）
+// Jackson（ObjectMapper）の役割は、大きく分けて2つです。
+// シリアライズ（書き出し）:
+// Javaのオブジェクトを JSON文字列 に変換します。
+// 例：Userオブジェクト → {"id": 1, "name": "alice"}
+// デシリアライズ（読み込み）:
+// JSON文字列 を解析して、Javaのオブジェクトに変換します。
+// 例：{"id": 1, "name": "alice"} → Userオブジェクト
 
 @Service // このクラスをSpringが管理するコンポーネントとしてマーク
 public class BlueskyDataProcessor {
     private final UserDAO userDao;
     private final PostDAO postDao;
+    private final ObjectMapper objectMapper;
     // Serviceクラスなどの部品（DAOやRepository）にだけ final を強く推奨
     // 理由①：コンストラクタ注入を強制するため
     // Javaで final をつけたフィールドは、コンストラクタが終わるまでに必ず値を入れなければならないというルールがあります。
     // 理由②：実行時の安全（不変性）の確保
 
-    public BlueskyDataProcessor(UserDAO userDao, PostDAO postDao){
+    public BlueskyDataProcessor(UserDAO userDao, PostDAO postDao, ObjectMapper objectMapper){
         this.userDao = userDao;
         this.postDao = postDao;
+        this.objectMapper = objectMapper;
     }
 
-    public void processFeed (String jsonText){}
+    public void processFeed (String jsonText){
+        FeedResponse response = mapper.readValue();
+
+    }
 
 }
