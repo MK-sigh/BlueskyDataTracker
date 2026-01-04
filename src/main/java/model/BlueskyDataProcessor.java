@@ -3,12 +3,12 @@ import DAO.PostDAO;
 import DAO.UserDAO;
 
 public class BlueskyDataProcessor {
-    private UserDAO userDao;
-    private PostDAO postDao;
+    private final UserDAO userDao;
+    private final PostDAO postDao;
     
     public BlueskyDataProcessor(UserDAO userDao, PostDAO postDao){
-        userDao = this.userDao;
-        postDao = this.postDao;
+        this.userDao = userDao;
+        this.postDao = postDao;
     }
 
     public void processFeed (String jsonText){}

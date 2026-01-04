@@ -13,13 +13,13 @@ public class User {
     public User(){}
     public User(int id, String did, String handle, String display_name,
         int followers_count, int following_count, ZonedDateTime created_at){
-            id = this.id;
-            did = this.did;
-            handle = this.handle;
-            display_name = this.display_name;
-            followers_count = this.followers_count;
-            following_count = this.following_count;
-            created_at = this.created_at;
+        this.id = id;
+        this.did = did;
+        this.handle = handle;
+        this.display_name = display_name;
+        this.followers_count = followers_count;
+        this.following_count = following_count;
+        this.created_at = created_at;
         }
 
 

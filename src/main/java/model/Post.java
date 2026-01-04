@@ -15,14 +15,14 @@ public class Post {
     public Post(){};
     public Post(int id, String uri, String cid, String text, ZonedDateTime created_at, 
         ZonedDateTime indexed_at, String language, int author_id){
-        id = this.id;
-        uri = this.uri;
-        cid = this.cid;
-        text = this.text;
-        created_at = this.created_at;
-        indexed_at = this.indexed_at;
-        language = this.language;
-        author_id = this.author_id;
+        this.id = id;
+        this.uri = uri;
+        this.cid = cid;
+        this.text = text;
+        this.created_at = created_at;
+        this.indexed_at = indexed_at;
+        this.language = language;
+        this.author_id = author_id;
     }
 
     public int getId(){return id;}
