@@ -67,8 +67,7 @@ public class BlueskyDataProcessor {
                     newUser.setDid(did);
                     newUser.setHandle(handle);
                     newUser.setDisplay_name(displayName);
-                    // TODO: followers_count, following_count, created_at は API の別の場所にあるため、
-                    // ここでは省略
+                    // followers_count, following_count, created_at は API の別の場所にあるため、ここでは省略
 
                     // データベースに新しいユーザーを格納し、最新の状態を返す（採番されたidが入る）
                     authorUser = userDao.save(newUser);
