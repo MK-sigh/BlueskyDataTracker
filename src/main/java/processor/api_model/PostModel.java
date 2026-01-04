@@ -1,4 +1,4 @@
-package model;
+package processor.api_model;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -13,5 +13,5 @@ public class PostModel {
 
     // Jacksonがパースできるように、デフォルトコンストラクタとゲッター/セッター（またはpublicフィールド）が必要です
     public PostModel() {}
-    
+
 }

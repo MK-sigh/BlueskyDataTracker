@@ -1,4 +1,4 @@
-package model;
+package processor.api_model;
 
 import java.util.List;
 

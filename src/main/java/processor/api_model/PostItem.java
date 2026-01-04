@@ -1,4 +1,4 @@
-package model;
+package processor.api_model;
 
 public class PostItem {
     private PostModel post;
