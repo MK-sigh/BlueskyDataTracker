@@ -22,7 +22,26 @@ public class User {
         this.created_at = created_at;
         }
 
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
 
+    public String getDid() {return did;}
+    public void setDid(String did) {this.did = did;}
+
+    public String getHandle() {return handle;}
+    public void setHandle(String handle) {this.handle = handle;}
+
+    public String getDisplay_name() {return display_name;}
+    public void setDisplay_name(String display_name) {this.display_name = display_name;}
+
+    public int getFollowers_count() {return followers_count;}
+    public void setFollowers_count(int followers_count) {this.followers_count = followers_count;}
+
+    public int getFollowing_count() {return following_count;}
+    public void setFollowing_count(int following_count) {this.following_count = following_count;}
+
+    public ZonedDateTime getCreated_at() {return created_at;}
+    public void setCreated_at(ZonedDateTime created_at) {this.created_at = created_at;}
 
 
 }

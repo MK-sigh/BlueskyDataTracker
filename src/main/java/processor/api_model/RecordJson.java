@@ -3,7 +3,7 @@ package processor.api_model;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class PostModel {
+public class RecordJson {
     ZonedDateTime createdAt;
     List<String> langs;
     String text;
@@ -12,7 +12,7 @@ public class PostModel {
     int likeCount;
 
     // Jacksonがパースできるように、デフォルトコンストラクタとゲッター/セッター（またはpublicフィールド）が必要です
-    public PostModel() {}
+    public RecordJson() {}
 
     public ZonedDateTime getCreatedAt() {return createdAt;}
     public void setCreatedAt(ZonedDateTime createdAt) {this.createdAt = createdAt;}

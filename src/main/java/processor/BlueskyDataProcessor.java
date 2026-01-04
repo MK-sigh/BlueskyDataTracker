@@ -2,6 +2,8 @@ package processor;
 import DAO.PostDAO;
 import DAO.UserDAO;
 import org.springframework.stereotype.Service; // Spring Bootにコンポーネントであることを教える
+import processor.api_model.FeedResponse;
+import processor.api_model.PostItem;
 // Spring Frameworkにおいて「ビジネスロジック（業務処理）」を担当するクラスであることを示すための目印です。
 // 1. 主な役割
 // ビジネスロジックの記述: 「データの計算」「複数のリポジトリを組み合わせた処理」「外部APIとの連携」など、
@@ -41,9 +43,28 @@ public class BlueskyDataProcessor {
         this.objectMapper = objectMapper;
     }
 
+
     public void processFeed (String jsonText){
+        // 1. JSONパース responseはPostItemのリストとcursorを持つ
         FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
 
-    }
+        // 2. 投稿リストのループ処理 itemはauthorとpostを持つ
+        for (PostItem item : response.getFeed()) {
+            // ユーザー情報の抽出
+            String did = item.getAuthor().getDid();
+            String handle = item.getAuthor().getHandle();
+            String displayName = item.getAuthor().getDisplayName();
+            //ポスト情報
+            
+
+
+            // ★ユーザーの存在チェックと格納（UserDAOのメソッドを使って）
+            // 最初にUserDAOを使って、このdidのユーザーがDBに存在するかどうかをチェックします。
+            
+            // if ( /* UserDAOのメソッドでユーザーが存在しない場合 */ ) {
+            //     // 新しいユーザーを作成・格納するロジック
+            // }
+
+        }
 
 }

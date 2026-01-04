@@ -25,14 +25,30 @@ public class Post {
         this.author_id = author_id;
     }
 
-    public int getId(){return id;}
-    public String getUri(){return uri;}
-    public String getCid(){return cid;}
-    public String getText(){return text;}
-    public ZonedDateTime getCreated_at(){return created_at;}
-    public ZonedDateTime getIndexed_at(){return indexed_at;}
-    public String getLanguage(){return language;}
-    public int getAuthor_id(){return author_id;}
+    public int getId() {return id;}
+    public void setId(int id) {this.id = id;}
+
+    public String getUri() {return uri;}
+    public void setUri(String uri) {this.uri = uri;}
+
+    public String getCid() {return cid;}
+    public void setCid(String cid) {this.cid = cid;}
+
+    public String getText() {return text;}
+    public void setText(String text) {this.text = text;}
+
+    public ZonedDateTime getCreated_at() {return created_at;}
+    public void setCreated_at(ZonedDateTime created_at) {this.created_at = created_at;}
+
+    public ZonedDateTime getIndexed_at() {return indexed_at;}
+    public void setIndexed_at(ZonedDateTime indexed_at) {this.indexed_at = indexed_at;}
+
+    public String getLanguage() {return language;}
+    public void setLanguage(String language) {this.language = language;}
+
+    public int getAuthor_id() {return author_id;}
+    public void setAuthor_id(int author_id) {this.author_id = author_id;}
+
 
 
 }

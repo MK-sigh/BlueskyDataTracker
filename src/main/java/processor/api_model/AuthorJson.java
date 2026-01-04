@@ -1,6 +1,6 @@
 package processor.api_model;
 
-public class PostAuthor {
+public class AuthorJson {
     private String did;
     private String handle;
     private String displayName;
