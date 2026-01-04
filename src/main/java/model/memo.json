@@ -1,0 +1,38 @@
+{
+
+  "feed": [
+    {
+      "post": {
+        "uri": "at://did:plc:example123/app.bsky.feed.post/3lc5j6k7m8n2p",
+        "cid": "bafyreihdx7o...",
+        "author": {
+          "did": "did:plc:example123",
+          "handle": "user.bsky.social",
+          "displayName": "サンプル太郎",
+          "avatar": "cdn.bsky.app",
+          "viewer": {
+            "muted": false,
+            "blockedBy": false
+          },
+          "labels": []
+        },
+        "record": {
+          "$type": "app.bsky.feed.post",
+          "createdAt": "2026-01-03T16:00:00.000Z",
+          "langs": ["ja"],
+          "text": "BlueskyのAPIから取得したダミーデータです。2026年も分散型SNSが活発ですね！"
+        },
+
+        "replyCount": 5,
+        "repostCount": 12,
+        "likeCount": 42,
+        "indexedAt": "2026-01-03T16:00:05.123Z",
+        "viewer": {
+          "like": "at://did:plc:yourid/app.bsky.feed.like/3lc..."
+        },
+        "labels": []
+      }
+    }
+  ],
+  "cursor": "1704297600000::3lc5j6k7m8n2p"
+}
