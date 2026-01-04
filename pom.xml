@@ -8,7 +8,7 @@
 		<version>4.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>bluesky_tracker</groupId>
 	<artifactId>bluesky-tracker</artifactId> <!-- ここを好きな名前に変更 -->
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
