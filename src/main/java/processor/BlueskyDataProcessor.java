@@ -42,7 +42,7 @@ public class BlueskyDataProcessor {
     }
 
     public void processFeed (String jsonText){
-        FeedResponse response = mapper.readValue();
+        FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
 
     }
 
