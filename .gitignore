@@ -34,4 +34,4 @@ build/
 
 # 設定ファイル・秘密情報（必要に応じて）
 .env
-config.properties
+application-local.properties
