@@ -1,23 +1,49 @@
 package model;
+import java.time.ZonedDateTime;
 
 public class Post {
     private int id; // SERIAL PRIMARY KEY に対応
+    private String uri;
+    private String cid;
     private String text; // TEXT NOT NULL に対応
-    private java.time.ZonedDateTime created_at; // TIMESTAMP WITH TIME ZONE NOT NULL に対応
+    private ZonedDateTime created_at; // TIMESTAMP WITH TIME ZONE NOT NULL に対応
+    private ZonedDateTime indexed_at;
+    private String language;
     private int author_id; // INTEGER (外部キー) に対応
 
+
     public Post(){};
-    public Post(int id, String text, java.time.ZonedDateTime created_at, int author_id){
+    public Post(int id, String uri, String cid, String text, ZonedDateTime created_at, 
+        ZonedDateTime indexed_at, String language, int author_id){
         id = this.id;
+        uri = this.uri;
+        cid = this.cid;
         text = this.text;
         created_at = this.created_at;
+        indexed_at = this.indexed_at;
+        language = this.language;
         author_id = this.author_id;
     }
 
     public int getId(){return id;}
+    public String getUri(){return uri;}
+    public String getCid(){return cid;}
     public String getText(){return text;}
-    public java.time.ZonedDateTime getCreated_at(){return created_at;}
+    public ZonedDateTime getCreated_at(){return created_at;}
+    public ZonedDateTime getIndexed_at(){return indexed_at;}
+    public String getLanguage(){return language;}
     public int getAuthor_id(){return author_id;}
 
 
 }
+
+
+// カラム名	DB型	制約	変更点
+// id	SERIAL	PRIMARY KEY	主キー（連番）
+// uri	VARCHAR(255)	UNIQUE, NOT NULL	追加：投稿のユニークID
+// cid	VARCHAR(255)	NOT NULL	追加：コンテンツID（データ参照に必須）
+// text	TEXT	NOT NULL	投稿内容
+// created_at	TIMESTAMP	NOT NULL	投稿日
+// indexed_at	TIMESTAMP	NOT NULL	追加：投稿がBlueskyにインデックスされた時刻
+// language	VARCHAR(10)	NOT NULL	言語
+// author_id	INTEGER	FK users(id)	投稿者ID
