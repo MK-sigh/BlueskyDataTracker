@@ -101,8 +101,8 @@ public class BlueskyDataProcessor {
             newPost.setText (text);
             newPost.setCreated_at (createdAt);
             newPost.setIndexed_at (indexedAt);
-            newPost.setLanguage (langs);
-            newPost.setLabel(label);
+            newPost.setLanguage (String.join(",",langs));
+            newPost.setLabel (String.join(",",label));
             newPost.setReplyCount(replyCount);
             newPost.setRepostCount(repostCount);
             newPost.setLikeCount(likeCount);
