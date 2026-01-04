@@ -1,9 +1,11 @@
 package processor;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import DAO.PostDAO;
 import DAO.UserDAO;
+import model.User;
 import org.springframework.stereotype.Service; // Spring Bootにコンポーネントであることを教える
 import processor.api_model.FeedResponse;
 import processor.api_model.PostItemJson;
@@ -48,6 +50,9 @@ public class BlueskyDataProcessor {
 
 
     public void processFeed (String jsonText){
+        // ★投稿者のUserエンティティを保持する変数
+        User authorUser;
+
         // 1. JSONパース FeedResponseはPostItemJsonのリストとcursorを持つ
         FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
 
@@ -69,11 +74,30 @@ public class BlueskyDataProcessor {
 
             // ★ユーザーの存在チェックと格納（UserDAOのメソッドを使って）
             // 最初にUserDAOを使って、このdidのユーザーがDBに存在するかどうかをチェックします。
-            
-            // if ( /* UserDAOのメソッドでユーザーが存在しない場合 */ ) {
-            //     // 新しいユーザーを作成・格納するロジック
+            Optional <User> ExistingUser = userDao.findByDid(did);
+
+            if (ExistingUser.isEmpty()){ /* UserDAOのメソッドでユーザーが存在しない場合 */
+                // 新しいユーザーを作成・格納するロジック
+                User newUser = new User();
+                newUser.setDid(did);
+                newUser.setHandle(handle);
+                newUser.setDisplay_name(displayName);
+                // TODO: followers_count, following_count, created_at は API の別の場所にあるため、
+                // ここでは省略
+
+                // データベースに新しいユーザーを格納し、最新の状態を返す（採番されたidが入る）
+                authorUser = userDao.save(newUser);
+
+                // 格納されたUserエンティティからIDを取得
+                int id = authorUser.getId();
+            }else{
+                authorUser = ExistingUser.get();
             }
 
+
+
+
         }
+    }
 
 }

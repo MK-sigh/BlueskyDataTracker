@@ -4,9 +4,13 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public class RecordJson {
-    ZonedDateTime createdAt;
-    List<String> langs;
+    String uri;
+    String cid;
     String text;
+    ZonedDateTime createdAt;
+    ZonedDateTime indexedAt;
+    List<String> langs;
+    List<String> label;
     int replyCount;
     int repostCount;
     int likeCount;

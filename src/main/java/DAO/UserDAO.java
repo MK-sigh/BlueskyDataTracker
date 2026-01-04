@@ -4,13 +4,15 @@ import java.util.Optional;
 import model.User;
 import org.springframework.data.repository.CrudRepository;
 
+
 public interface UserDAO extends CrudRepository <User, Integer> {
 // Spring Data の作法: 結果が 0件または 1件であるため、戻り値の型には Optional<User> を使用します。
 // メソッド名のルール: findBy + [カラム名]
+// findByDid と書くだけで、Spring は内部的に SELECT * FROM users WHERE did = ? という SQL を自動生成します。
+
     Optional<User> findByDid(String did);
+    Optional<User> findById(int did);
 
-
-    
 }
 
 // Spring Data JPA のリポジトリでメソッドを定義する際、戻り値を Optional<T> にしておくと、
