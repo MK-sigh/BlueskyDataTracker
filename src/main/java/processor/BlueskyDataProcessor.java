@@ -9,7 +9,7 @@ import model.Post;
 import model.User;
 import org.springframework.stereotype.Service; // Spring Bootにコンポーネントであることを教える
 import processor.api_model.FeedResponse;
-import processor.api_model.RecordItemJson;
+import processor.api_model.ItemFeedJson;
 // Spring Frameworkにおいて「ビジネスロジック（業務処理）」を担当するクラスであることを示すための目印です。
 // 1. 主な役割
 // ビジネスロジックの記述: 「データの計算」「複数のリポジトリを組み合わせた処理」「外部APIとの連携」など、
@@ -54,24 +54,26 @@ public class BlueskyDataProcessor {
         // ★投稿者のUserエンティティを保持する変数
         User authorUser;
 
-        // 1. JSONパース FeedResponseはPostItemJsonのリストとcursorを持つ
+        // 1. JSONパース FeedResponseはItemFeedJsonのリストとcursorを持つ
         FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
 
-        // 2. 投稿リストのループ処理 RecordItemJsonはPostJsonとAuthorJsonを持つ
-        for (RecordItemJson item : response.getFeed()) {
+        // 2. 投稿リストのループ処理 ItemFeedJsonはPostRecordJsonとAuthorJsonを持つ
+        for (ItemFeedJson item : response.getFeed()) {
             // ユーザー情報の抽出
             String did = item.getAuthor().getDid();
             String handle = item.getAuthor().getHandle();
             String displayName = item.getAuthor().getDisplayName();
             //ポスト情報
-            ZonedDateTime createdAt = item.getPost().getCreatedAt();
-            List<String> langs = item.getPost().getLangs();
+            String uri = item.getPost().getUri();
+            String cid = item.getPost().getCid();
             String text = item.getPost().getText();
+            ZonedDateTime createdAt = item.getPost().getCreatedAt();
+            ZonedDateTime indexedAt = item.getPost().getIndexedAt();
+            List<String> langs = item.getPost().getLangs();
+            List<String> label = item.getPost().getLabel();
             int replyCount = item.getPost().getReplyCount();
             int repostCount = item.getPost().getRepostCount();
             int likeCount = item.getPost().getLikeCount();
-
-
 
             // ★ユーザーの存在チェックと格納（UserDAOのメソッドを使って）
             // 最初にUserDAOを使って、このdidのユーザーがDBに存在するかどうかをチェックします。
@@ -89,30 +91,24 @@ public class BlueskyDataProcessor {
                 // データベースに新しいユーザーを格納し、最新の状態を返す（採番されたidが入る）
                 authorUser = userDao.save(newUser);
 
-                // 格納されたUserエンティティからIDを取得
-                int id = authorUser.getId();
             }else{
                 authorUser = ExistingUser.get();
             }
             Post newPost = new Post();
-            newPost.setId (authorUser.getId());
-            newPost.set
+            newPost.setCid(cid);
             newPost.setUri (uri);
             newPost.setCid (cid);
             newPost.setText (text);
             newPost.setCreated_at (createdAt);
             newPost.setIndexed_at (indexedAt);
             newPost.setLanguage (langs);
-            newPost.setAuthor_id (authorId);
-            
-            ZonedDateTime createdAt = item.getPost().getCreatedAt();
-            List<String> langs = item.getPost().getLangs();
-            String text = item.getPost().getText();
-            int replyCount = item.getPost().getReplyCount();
-            int repostCount = item.getPost().getRepostCount();
-            int likeCount = item.getPost().getLikeCount();
+            newPost.setLabel(label);
+            newPost.setReplyCount(replyCount);
+            newPost.setRepostCount(repostCount);
+            newPost.setLikeCount(likeCount);
+            newPost.setAuthor_id (authorUser.getId());// 格納されたUserエンティティからIDを取得
 
-
+            postDao.save(newPost);
 
         }
     }
