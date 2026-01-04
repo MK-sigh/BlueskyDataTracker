@@ -3,7 +3,7 @@ package processor.api_model;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class RecordJson {
+public class PostJson {
     String uri;
     String cid;
     String text;
@@ -16,7 +16,7 @@ public class RecordJson {
     int likeCount;
 
     // Jacksonがパースできるように、デフォルトコンストラクタとゲッター/セッター（またはpublicフィールド）が必要です
-    public RecordJson() {}
+    public PostJson() {}
 
     public ZonedDateTime getCreatedAt() {return createdAt;}
     public void setCreatedAt(ZonedDateTime createdAt) {this.createdAt = createdAt;}

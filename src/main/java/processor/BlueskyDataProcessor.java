@@ -5,10 +5,11 @@ import java.util.Optional;
 
 import DAO.PostDAO;
 import DAO.UserDAO;
+import model.Post;
 import model.User;
 import org.springframework.stereotype.Service; // Spring Bootにコンポーネントであることを教える
 import processor.api_model.FeedResponse;
-import processor.api_model.PostItemJson;
+import processor.api_model.RecordItemJson;
 // Spring Frameworkにおいて「ビジネスロジック（業務処理）」を担当するクラスであることを示すための目印です。
 // 1. 主な役割
 // ビジネスロジックの記述: 「データの計算」「複数のリポジトリを組み合わせた処理」「外部APIとの連携」など、
@@ -56,8 +57,8 @@ public class BlueskyDataProcessor {
         // 1. JSONパース FeedResponseはPostItemJsonのリストとcursorを持つ
         FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
 
-        // 2. 投稿リストのループ処理 PostItemJsonはRecofdJsonとAuthorJsonを持つ
-        for (PostItemJson item : response.getFeed()) {
+        // 2. 投稿リストのループ処理 RecordItemJsonはPostJsonとAuthorJsonを持つ
+        for (RecordItemJson item : response.getFeed()) {
             // ユーザー情報の抽出
             String did = item.getAuthor().getDid();
             String handle = item.getAuthor().getHandle();
@@ -93,7 +94,23 @@ public class BlueskyDataProcessor {
             }else{
                 authorUser = ExistingUser.get();
             }
-
+            Post newPost = new Post();
+            newPost.setId (authorUser.getId());
+            newPost.set
+            newPost.setUri (uri);
+            newPost.setCid (cid);
+            newPost.setText (text);
+            newPost.setCreated_at (createdAt);
+            newPost.setIndexed_at (indexedAt);
+            newPost.setLanguage (langs);
+            newPost.setAuthor_id (authorId);
+            
+            ZonedDateTime createdAt = item.getPost().getCreatedAt();
+            List<String> langs = item.getPost().getLangs();
+            String text = item.getPost().getText();
+            int replyCount = item.getPost().getReplyCount();
+            int repostCount = item.getPost().getRepostCount();
+            int likeCount = item.getPost().getLikeCount();
 
 
 
