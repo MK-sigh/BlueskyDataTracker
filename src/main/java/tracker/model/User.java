@@ -1,10 +1,8 @@
 package tracker.model;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import java.time.ZonedDateTime;
@@ -20,9 +18,7 @@ public class User {
     private String display_name;
     private int followers_count;
     private int following_count;
-    @Column(name = "created_at", nullable = false)
-    private ZonedDateTime created_at; // nullable=false が NOT NULL 制約に対応
-    // private ZonedDateTime created_at;
+    private ZonedDateTime created_at;
 
     public User(){}
     public User(int id, String did, String handle, String display_name,
@@ -58,16 +54,6 @@ public class User {
     public void setCreated_at(ZonedDateTime created_at) {this.created_at = created_at;}
 
 
-    // ★追加するメソッド：保存直前に現在時刻を設定
-    /**
-     * エンティティがデータベースに永続化される直前に実行され、createdAtに現在時刻を設定します。
-     */
-    @PrePersist
-    protected void onCreate() {
-        if (this.created_at == null) {
-            this.created_at = ZonedDateTime.now();
-        }
-    }
 }
 
 // id	SERIAL	PRIMARY KEY	主キー（連番）

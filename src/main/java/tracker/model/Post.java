@@ -20,29 +20,35 @@ public class Post {
     private ZonedDateTime indexed_at;
     private String language;
     private String label;
+    private int bookmarkCount;
     private int replyCount;
     private int repostCount;
     private int likeCount;
+    private int quoteCount;
     private int author_id; // INTEGER (外部キー) に対応
 
-
+    
+    
     public Post(){};
     public Post(int id, String uri, String cid, String text, ZonedDateTime created_at, 
         ZonedDateTime indexed_at, String language, String label,
-        int replyCount, int repostCount, int likeCount, int author_id){
-        this.id = id;
-        this.uri = uri;
-        this.cid = cid;
-        this.text = text;
-        this.created_at = created_at;
-        this.indexed_at = indexed_at;
-        this.language = language;
-        this.label = label;
-        this.replyCount = replyCount;
-        this.repostCount = repostCount;
-        this.likeCount = likeCount;
-        this.author_id = author_id;
-    }
+        int bookmarkCount, int replyCount, int repostCount, int likeCount, int quoteCount,
+        int author_id){
+            this.id = id;
+            this.uri = uri;
+            this.cid = cid;
+            this.text = text;
+            this.created_at = created_at;
+            this.indexed_at = indexed_at;
+            this.language = language;
+            this.label = label;
+            this.bookmarkCount = bookmarkCount;
+            this.replyCount = replyCount;
+            this.repostCount = repostCount;
+            this.likeCount = likeCount;
+            this.quoteCount = quoteCount;
+            this.author_id = author_id;
+        }
 
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
@@ -68,6 +74,9 @@ public class Post {
     public String getLabel() {return label;}
     public void setLabel(String label) {this.label = label;}
 
+    public int getBookmarkCount() { return bookmarkCount; }
+    public void setBookmarkCount(int bookmarkCount) { this.bookmarkCount = bookmarkCount; }
+
     public int getReplyCount() {return replyCount;}
     public void setReplyCount(int replyCount) {this.replyCount = replyCount;}
 
@@ -77,10 +86,11 @@ public class Post {
     public int getLikeCount() {return likeCount;}
     public void setLikeCount(int likeCount) {this.likeCount = likeCount;}
 
+    public int getQuoteCount() { return quoteCount; }
+    public void setQuoteCount(int quoteCount) { this.quoteCount = quoteCount; }
+
     public int getAuthor_id() {return author_id;}
     public void setAuthor_id(int author_id) {this.author_id = author_id;}
-
-
 }
 
 

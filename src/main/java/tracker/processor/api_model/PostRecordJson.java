@@ -11,9 +11,11 @@ public class PostRecordJson {
     ZonedDateTime indexedAt;
     List<String> langs;
     List<String> label;
+    int bookmarkCount;
     int replyCount;
     int repostCount;
     int likeCount;
+    int quoteCount;
 
     // Jacksonがパースできるように、デフォルトコンストラクタとゲッター/セッター（またはpublicフィールド）が必要です
     public PostRecordJson() {}
@@ -48,6 +50,10 @@ public class PostRecordJson {
     public int getLikeCount() {return likeCount;}
     public void setLikeCount(int likeCount) {this.likeCount = likeCount;}
 
+    public int getBookmarkCount() { return bookmarkCount; }
+    public void setBookmarkCount(int bookmarkCount) { this.bookmarkCount = bookmarkCount; }
 
+    public int getQuoteCount() { return quoteCount; }
+    public void setQuoteCount(int quoteCount) { this.quoteCount = quoteCount; }
 
 }

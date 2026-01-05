@@ -1,38 +1,178 @@
 {
-
-  "feed": [
-    {
-      "post": {
-        "uri": "at://did:plc:example123/app.bsky.feed.post/3lc5j6k7m8n2p",
-        "cid": "bafyreihdx7o...",
-        "author": {
-          "did": "did:plc:example123",
-          "handle": "user.bsky.social",
-          "displayName": "サンプル太郎",
-          "avatar": "cdn.bsky.app",
-          "viewer": {
-            "muted": false,
-            "blockedBy": false
+  "thread":{
+    "$type":"app.bsky.feed.defs#threadViewPost",
+    "post":{
+      "uri":"at://did:plc:qvoqgmaen2prtipfxxuare2n/app.bsky.feed.post/3mbn3ykieys2u",
+      "cid":"bafyreifl72mgcmrlxyja2amwj6ctbflrudhsbj4x3lg3lkr76xxys4xssq",
+      "author":{
+        "did":"did:plc:qvoqgmaen2prtipfxxuare2n",
+        "handle":"perfett.bsky.social",
+        "displayName":"Chris Perfett",
+        "avatar":"https://cdn.bsky.app/img/avatar/plain/did:plc:qvoqgmaen2prtipfxxuare2n/bafkreih3zvj7fte23gamj4f7tjsiawavnno6wuibe3psmrs47k4zzszymq@jpeg",
+        "associated":{
+          "chat":{"allowIncoming":"all"},
+          "activitySubscription":{"allowSubscriptions":"followers"}
+        },
+        "labels":[],
+        "createdAt":"2023-06-27T02:12:21.916Z"
+      },
+      "record":{
+        "$type":"app.bsky.feed.post",
+        "createdAt":"2026-01-04T23:41:58.487Z",
+        "embed":{
+          "$type":"app.bsky.embed.record",
+          "record":{
+            "cid":"bafyreifi5zbi2u35wgzzh7v6s2bz2mnxslznkj4xswcqkxzyiinksldj34",
+            "uri":"at://did:plc:lnpvrdxah45pmww2zgemzr4g/app.bsky.feed.post/3mbn3gqqkzs2d"
+          }
+        },
+        "langs":["en"],
+        "text":"This is my royal commandment as the \"go loins\" guy - we must support our cat brethren from the south. They are fellow dirtbags and desire a heaven neither of us have known. They carry the vibes. No weapon formed against them must be allowed to prosper."
+      },
+      "embed":{
+        "$type":"app.bsky.embed.record#view",
+        "record":{
+          "$type":"app.bsky.embed.record#viewRecord",
+          "uri":"at://did:plc:lnpvrdxah45pmww2zgemzr4g/app.bsky.feed.post/3mbn3gqqkzs2d",
+          "cid":"bafyreifi5zbi2u35wgzzh7v6s2bz2mnxslznkj4xswcqkxzyiinksldj34",
+          "author":{
+            "did":"did:plc:lnpvrdxah45pmww2zgemzr4g",
+            "handle":"ryanday.bsky.social",
+            "displayName":"Ryan Day",
+            "avatar":"https://cdn.bsky.app/img/avatar/plain/did:plc:lnpvrdxah45pmww2zgemzr4g/bafkreigfhubygkxmtfbk4djnz4wkcvybebd5wb3nzr5eelyaxvqsvl3pba@jpeg",
+            "associated":{"activitySubscription":{"allowSubscriptions":"followers"}},
+            "labels":[],
+            "createdAt":"2023-05-03T15:14:12.475Z"
           },
-          "labels": []
+          "value":{
+            "$type":"app.bsky.feed.post",
+            "createdAt":"2026-01-04T23:32:01.068Z",
+            "embed":{
+              "$type":"app.bsky.embed.video",
+              "aspectRatio":{"height":994,"width":828},
+              "video":{
+                "$type":"blob",
+                "ref":{"$link":"bafkreigl4jjpun3yfvdazhiftcgncfr3qepoyk2cik6wcd4v5hlkr3csoe"},
+                "mimeType":"video/mp4",
+                "size":8947064
+              }
+            },
+            "langs":["en"],
+            "text":"The Jaguars are going to the Super Bowl."
+          },
+          "labels":[],
+          "likeCount":29,
+          "replyCount":1,
+          "repostCount":7,
+          "quoteCount":12,
+          "indexedAt":"2026-01-04T23:32:06.336Z",
+          "embeds":[{
+            "$type":"app.bsky.embed.video#view",
+            "cid":"bafkreigl4jjpun3yfvdazhiftcgncfr3qepoyk2cik6wcd4v5hlkr3csoe",
+            "playlist":"https://video.bsky.app/watch/did%3Aplc%3Alnpvrdxah45pmww2zgemzr4g/bafkreigl4jjpun3yfvdazhiftcgncfr3qepoyk2cik6wcd4v5hlkr3csoe/playlist.m3u8",
+            "thumbnail":"https://video.bsky.app/watch/did%3Aplc%3Alnpvrdxah45pmww2zgemzr4g/bafkreigl4jjpun3yfvdazhiftcgncfr3qepoyk2cik6wcd4v5hlkr3csoe/thumbnail.jpg",
+            "aspectRatio":{"height":994,"width":828}
+          }]
+        }
+      },
+      "bookmarkCount":0,
+      "replyCount":2,
+      "repostCount":2,
+      "likeCount":9,
+      "quoteCount":0,
+      "indexedAt":"2026-01-04T23:41:59.834Z",
+      "labels":[]
+    },
+    "replies":[{
+      "$type":"app.bsky.feed.defs#threadViewPost",
+      "post":{
+        "uri":"at://did:plc:qvoqgmaen2prtipfxxuare2n/app.bsky.feed.post/3mbn4aniwfk2u",
+        "cid":"bafyreihq7djavudmil4mgwsv4du54mmy7kqpjshu242wlnbzz3pvwbenqq",
+        "author":{
+          "did":"did:plc:qvoqgmaen2prtipfxxuare2n",
+          "handle":"perfett.bsky.social",
+          "displayName":"Chris Perfett",
+          "avatar":"https://cdn.bsky.app/img/avatar/plain/did:plc:qvoqgmaen2prtipfxxuare2n/bafkreih3zvj7fte23gamj4f7tjsiawavnno6wuibe3psmrs47k4zzszymq@jpeg",
+          "associated":{
+            "chat":{"allowIncoming":"all"},
+            "activitySubscription":{"allowSubscriptions":"followers"}
+          },
+          "labels":[],
+          "createdAt":"2023-06-27T02:12:21.916Z"
         },
-        "record": {
-          "$type": "app.bsky.feed.post",
-          "createdAt": "2026-01-03T16:00:00.000Z",
-          "langs": ["ja"],
-          "text": "BlueskyのAPIから取得したダミーデータです。2026年も分散型SNSが活発ですね！"
+        "record":{
+          "$type":"app.bsky.feed.post",
+          "createdAt":"2026-01-04T23:46:30.087Z",
+          "langs":["en"],
+          "reply":{
+            "parent":{
+              "cid":"bafyreifl72mgcmrlxyja2amwj6ctbflrudhsbj4x3lg3lkr76xxys4xssq",
+              "uri":"at://did:plc:qvoqgmaen2prtipfxxuare2n/app.bsky.feed.post/3mbn3ykieys2u"
+            },
+            "root":{
+              "cid":"bafyreifl72mgcmrlxyja2amwj6ctbflrudhsbj4x3lg3lkr76xxys4xssq",
+              "uri":"at://did:plc:qvoqgmaen2prtipfxxuare2n/app.bsky.feed.post/3mbn3ykieys2u"
+            }
+          },
+          "text":"we asked the End Zone Radio panel today: \"$1000 to bet today, who do you trust most to win the Super Bowl\" and I quickly answered Jaguars then too. Everything works here, opportunistic defense, good offense and gone into Denver and proven their mettle. I see the vision."
         },
-
-        "replyCount": 5,
-        "repostCount": 12,
-        "likeCount": 42,
-        "indexedAt": "2026-01-03T16:00:05.123Z",
-        "viewer": {
-          "like": "at://did:plc:yourid/app.bsky.feed.like/3lc..."
+        "bookmarkCount":0,
+        "replyCount":0,
+        "repostCount":0,
+        "likeCount":0,
+        "quoteCount":0,
+        "indexedAt":"2026-01-04T23:46:31.430Z",
+        "labels":[]
+      },
+      "replies":[],
+      "threadContext":{}
+    },{
+      "$type":"app.bsky.feed.defs#threadViewPost",
+      "post":{
+        "uri":"at://did:plc:lnpvrdxah45pmww2zgemzr4g/app.bsky.feed.post/3mbn3zdese22a",
+        "cid":"bafyreifq3f74mfcrfhiz5i6hdtkewzgs7ibgcjhjeeyervwjthrz3rscku",
+        "author":{
+          "did":"did:plc:lnpvrdxah45pmww2zgemzr4g",
+          "handle":"ryanday.bsky.social",
+          "displayName":"Ryan Day",
+          "avatar":"https://cdn.bsky.app/img/avatar/plain/did:plc:lnpvrdxah45pmww2zgemzr4g/bafkreigfhubygkxmtfbk4djnz4wkcvybebd5wb3nzr5eelyaxvqsvl3pba@jpeg",
+          "associated":{
+            "activitySubscription":{
+              "allowSubscriptions":"followers"
+            }
+          },
+          "labels":[],
+          "createdAt":"2023-05-03T15:14:12.475Z"
         },
-        "labels": []
+        "record":{
+          "$type":"app.bsky.feed.post",
+          "createdAt":"2026-01-04T23:42:24.585Z",
+          "langs":["en"],
+          "reply":{
+            "parent":{
+              "cid":"bafyreifl72mgcmrlxyja2amwj6ctbflrudhsbj4x3lg3lkr76xxys4xssq",
+              "uri":"at://did:plc:qvoqgmaen2prtipfxxuare2n/app.bsky.feed.post/3mbn3ykieys2u"
+            },
+            "root":{
+              "cid":"bafyreifl72mgcmrlxyja2amwj6ctbflrudhsbj4x3lg3lkr76xxys4xssq",
+              "uri":"at://did:plc:qvoqgmaen2prtipfxxuare2n/app.bsky.feed.post/3mbn3ykieys2u"
+            }
+          },
+        "text":"🗣️ AMEN"
+        },
+        "bookmarkCount":0,
+        "replyCount":0,
+        "repostCount":0,
+        "likeCount":1,
+        "quoteCount":0,
+        "indexedAt":"2026-01-04T23:42:24.927Z",
+        "labels":[]
+      },
+      "replies":[],
+      "threadContext":{
+        "rootAuthorLike":"at://did:plc:qvoqgmaen2prtipfxxuare2n/app.bsky.feed.like/3mbn3zrqcfn2s"
       }
-    }
-  ],
-  "cursor": "1704297600000::3lc5j6k7m8n2p"
+    }],
+    "threadContext":{}
+  }
 }

@@ -56,6 +56,8 @@ public class BlueskyDataProcessor {
                 int replyCount = item.getPost().getReplyCount();
                 int repostCount = item.getPost().getRepostCount();
                 int likeCount = item.getPost().getLikeCount();
+                int bookmarkCount = item.getPost().getBookmarkCount();
+                int quoteCount = item.getPost().getQuoteCount();
 
                 // ★ユーザーの存在チェックと格納（UserDAOのメソッドを使って）
                 // 最初にUserDAOを使って、このdidのユーザーがDBに存在するかどうかをチェックします。
@@ -67,6 +69,9 @@ public class BlueskyDataProcessor {
                     newUser.setDid(did);
                     newUser.setHandle(handle);
                     newUser.setDisplay_name(displayName);
+                    newUser.setCreated_at(ZonedDateTime.now());
+                    newUser.setFollowers_count(1);
+                    newUser.setFollowing_count(1);
                     // followers_count, following_count, created_at は API の別の場所にあるため、ここでは省略
 
                     // データベースに新しいユーザーを格納し、最新の状態を返す（採番されたidが入る）
@@ -83,11 +88,16 @@ public class BlueskyDataProcessor {
                 newPost.setCreated_at (createdAt);
                 newPost.setIndexed_at (indexedAt);
                 newPost.setLanguage (String.join(",",langs));
-                newPost.setLabel (String.join(",",label));
+                if (label != null && !label.isEmpty()){
+                    newPost.setLabel (String.join(",",label));
+                }else{newPost.setLabel("");}
+
                 newPost.setReplyCount(replyCount);
                 newPost.setRepostCount(repostCount);
                 newPost.setLikeCount(likeCount);
                 newPost.setAuthor_id (authorUser.getId());// 格納されたUserエンティティからIDを取得
+                newPost.setBookmarkCount(bookmarkCount);
+                newPost.setQuoteCount(quoteCount);
 
                 postDao.save(newPost);
 
