@@ -17,7 +17,7 @@ public class Post {
     private String createdAt; // TIMESTAMP WITH TIME ZONE NOT NULL に対応
     private String indexedAt;
     private String language;
-    private String label;
+    // private String label;
     private int bookmarkCount;
     private int replyCount;
     private int repostCount;
