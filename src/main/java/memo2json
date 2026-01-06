@@ -1,29 +1,3 @@
-package tracker.client;
-
-import java.io.IOException;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
-
-@Service
-public class BlueskyApiClient {
-    
-    // 取得したいAPIエンドポイント
-    private static final String API_URL = "https://bsky.social/xrpc/app.bsky.feed.getTimeline";
-    
-    // HTTPクライアント
-    private final RestClient restClient;
-
-    // コンストラクタで必要な依存性を注入する（今回は省略）
-    public BlueskyApiClient(RestClient restClient){
-        this.restClient = restClient;
-    }
-
-    // ★このメソッドを定義してください
-    // 戻り値は取得したJSON文字列、例外はIOExceptionをスローします。
-    public String fetchFeedJson() throws IOException {
-    // 構造をクリーンにし、コメントを完全に排除
-return """
 {
     "feed":[{
         "post":{
@@ -204,7 +178,4 @@ return """
             }
         }
     }]
-}
-"""; // ★ここも重要: }の直後に"""を置き、インデントを入れない
-}
 }

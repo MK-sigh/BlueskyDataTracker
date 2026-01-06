@@ -5,8 +5,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.time.ZonedDateTime;
-
 @Entity
 @Table (name = "posts")
 public class Post {
@@ -16,8 +14,8 @@ public class Post {
     private String uri;
     private String cid;
     private String text; // TEXT NOT NULL に対応
-    private ZonedDateTime created_at; // TIMESTAMP WITH TIME ZONE NOT NULL に対応
-    private ZonedDateTime indexed_at;
+    private String createdAt; // TIMESTAMP WITH TIME ZONE NOT NULL に対応
+    private String indexedAt;
     private String language;
     private String label;
     private int bookmarkCount;
@@ -25,29 +23,29 @@ public class Post {
     private int repostCount;
     private int likeCount;
     private int quoteCount;
-    private int author_id; // INTEGER (外部キー) に対応
+    private int authorId; // INTEGER (外部キー) に対応
 
     
     
     public Post(){};
-    public Post(int id, String uri, String cid, String text, ZonedDateTime created_at, 
-        ZonedDateTime indexed_at, String language, String label,
+    public Post(int id, String uri, String cid, String text, String createdAt, 
+        String indexedAt, String language,
         int bookmarkCount, int replyCount, int repostCount, int likeCount, int quoteCount,
-        int author_id){
+        int authorId){
             this.id = id;
             this.uri = uri;
             this.cid = cid;
             this.text = text;
-            this.created_at = created_at;
-            this.indexed_at = indexed_at;
+            this.createdAt = createdAt;
+            this.indexedAt = indexedAt;
             this.language = language;
-            this.label = label;
+            // this.label = label;
             this.bookmarkCount = bookmarkCount;
             this.replyCount = replyCount;
             this.repostCount = repostCount;
             this.likeCount = likeCount;
             this.quoteCount = quoteCount;
-            this.author_id = author_id;
+            this.authorId = authorId;
         }
 
     public int getId() {return id;}
@@ -62,17 +60,17 @@ public class Post {
     public String getText() {return text;}
     public void setText(String text) {this.text = text;}
 
-    public ZonedDateTime getCreated_at() {return created_at;}
-    public void setCreated_at(ZonedDateTime created_at) {this.created_at = created_at;}
+    public String getCreatedAt() {return createdAt;}
+    public void setCreatedAt(String createdAt) {this.createdAt = createdAt;}
 
-    public ZonedDateTime getIndexed_at() {return indexed_at;}
-    public void setIndexed_at(ZonedDateTime indexed_at) {this.indexed_at = indexed_at;}
+    public String getIndexedAt() {return indexedAt;}
+    public void setIndexedAt(String indexedAt) {this.indexedAt = indexedAt;}
 
     public String getLanguage() {return language;}
     public void setLanguage(String language) {this.language = language;}
 
-    public String getLabel() {return label;}
-    public void setLabel(String label) {this.label = label;}
+    // public String getLabel() {return label;}
+    // public void setLabel(String label) {this.label = label;}
 
     public int getBookmarkCount() { return bookmarkCount; }
     public void setBookmarkCount(int bookmarkCount) { this.bookmarkCount = bookmarkCount; }
@@ -89,8 +87,8 @@ public class Post {
     public int getQuoteCount() { return quoteCount; }
     public void setQuoteCount(int quoteCount) { this.quoteCount = quoteCount; }
 
-    public int getAuthor_id() {return author_id;}
-    public void setAuthor_id(int author_id) {this.author_id = author_id;}
+    public int getAuthorId() {return authorId;}
+    public void setAuthorId(int authorId) {this.authorId = authorId;}
 }
 
 
@@ -99,7 +97,7 @@ public class Post {
 // uri	VARCHAR(255)	UNIQUE, NOT NULL	追加：投稿のユニークID
 // cid	VARCHAR(255)	NOT NULL	追加：コンテンツID（データ参照に必須）
 // text	TEXT	NOT NULL	投稿内容
-// created_at	TIMESTAMP	NOT NULL	投稿日
-// indexed_at	TIMESTAMP	NOT NULL	追加：投稿がBlueskyにインデックスされた時刻
+// createdAt	TIMESTAMP	NOT NULL	投稿日
+// indexedAt	TIMESTAMP	NOT NULL	追加：投稿がBlueskyにインデックスされた時刻
 // language	VARCHAR(10)	NOT NULL	言語
-// author_id	INTEGER	FK users(id)	投稿者ID
+// authorId	INTEGER	FK users(id)	投稿者ID

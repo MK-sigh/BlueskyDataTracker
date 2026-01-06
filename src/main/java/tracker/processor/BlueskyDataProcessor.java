@@ -1,10 +1,8 @@
 package tracker.processor;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service; // Spring Bootにコンポーネントであることを教える
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import tracker.DAO.PostDAO;
@@ -13,16 +11,14 @@ import tracker.model.Post;
 import tracker.model.User;
 import tracker.processor.api_model.FeedResponse;
 import tracker.processor.api_model.ItemFeedJson;
+import tracker.processor.api_model.PostRecordJson;
+import tracker.processor.api_model.PostViewJson;
 
-@Service // このクラスをSpringが管理するコンポーネントとしてマーク
+@Service
 public class BlueskyDataProcessor {
     private final UserDAO userDao;
     private final PostDAO postDao;
     private final ObjectMapper objectMapper;
-    // Serviceクラスなどの部品（DAOやRepository）にだけ final を強く推奨
-    // 理由①：コンストラクタ注入を強制するため
-    // Javaで final をつけたフィールドは、コンストラクタが終わるまでに必ず値を入れなければならないというルールがあります。
-    // 理由②：実行時の安全（不変性）の確保
     
     public BlueskyDataProcessor(UserDAO userDao, PostDAO postDao, ObjectMapper objectMapper){
         this.userDao = userDao;
@@ -30,83 +26,114 @@ public class BlueskyDataProcessor {
         this.objectMapper = objectMapper;
     }
     
-    @ Transactional
     public void processFeed (String jsonText){
         try{
-            // ★投稿者のUserエンティティを保持する変数
             User authorUser;
             
-            // 1. JSONパース FeedResponseはItemFeedJsonのリストとcursorを持つ
+            // 1. JSONパース
             FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
             
-            // 2. 投稿リストのループ処理 ItemFeedJsonはPostRecordJsonとAuthorJsonを持つ
-            for (ItemFeedJson item : response.getFeed()) {
-                // ユーザー情報の抽出
-                String did = item.getAuthor().getDid();
-                String handle = item.getAuthor().getHandle();
-                String displayName = item.getAuthor().getDisplayName();
-                //ポスト情報
-                String uri = item.getPost().getUri();
-                String cid = item.getPost().getCid();
-                String text = item.getPost().getText();
-                ZonedDateTime createdAt = item.getPost().getCreatedAt();
-                ZonedDateTime indexedAt = item.getPost().getIndexedAt();
-                List<String> langs = item.getPost().getLangs();
-                List<String> label = item.getPost().getLabel();
-                int replyCount = item.getPost().getReplyCount();
-                int repostCount = item.getPost().getRepostCount();
-                int likeCount = item.getPost().getLikeCount();
-                int bookmarkCount = item.getPost().getBookmarkCount();
-                int quoteCount = item.getPost().getQuoteCount();
+            // 2. 投稿リストのループ処理
+            if (response.getFeed() == null) return; // feedが空の場合のガード
 
-                // ★ユーザーの存在チェックと格納（UserDAOのメソッドを使って）
-                // 最初にUserDAOを使って、このdidのユーザーがDBに存在するかどうかをチェックします。
+            for (ItemFeedJson item : response.getFeed()) {
+                
+                // ★階層の整理: Item -> PostView -> (Author, Record)
+                PostViewJson postView = item.getPost(); // ここで "post" (View) を取得
+                if (postView == null) continue;
+
+                // ユーザー情報の抽出（PostViewJsonの中にAuthorがいる）
+                if (postView.getAuthor() == null) continue;
+                String did = postView.getAuthor().getDid();
+                String handle = postView.getAuthor().getHandle();
+                String displayName = postView.getAuthor().getDisplayName();
+                String createdAccountAt = postView.getAuthor().getCreatedAt();
+
+                // ポストの中身（Record）の抽出
+                PostRecordJson record = postView.getRecord(); // ★先ほど名前を変えたメソッド
+                if (record == null) continue;
+
+                String text = record.getText();
+                String createdAt = record.getCreatedAt();
+                List<String> langs = record.getLangs();
+                // labelは今Recordに定義がないようなので一旦スキップ、必要ならPostRecordJsonに追加
+
+                // ポストのメタ情報（Viewにある情報）
+                String uri = postView.getUri();
+                String cid = postView.getCid();
+                
+                // indexedAtはViewにある場合とRecordにある場合がありますが、一旦Viewになければ無視
+                String indexedAt = postView.getIndexedAt();
+                int replyCount = postView.getReplyCount();
+                int repostCount = postView.getRepostCount();
+                int likeCount = postView.getLikeCount();
+                int bookmarkCount = postView.getBookmarkCount();
+                int quoteCount = postView.getQuoteCount();
+
+                // --- ここからDB保存処理 ---
+
+                // 1. ユーザーの処理
                 Optional <User> ExistingUser = userDao.findByDid(did);
 
-                if (ExistingUser.isEmpty()){ /* UserDAOのメソッドでユーザーが存在しない場合 */
-                    // 新しいユーザーを作成・格納するロジック
+                if (ExistingUser.isEmpty()){
                     User newUser = new User();
                     newUser.setDid(did);
                     newUser.setHandle(handle);
-                    newUser.setDisplay_name(displayName);
-                    newUser.setCreated_at(ZonedDateTime.now());
-                    newUser.setFollowers_count(1);
-                    newUser.setFollowing_count(1);
-                    // followers_count, following_count, created_at は API の別の場所にあるため、ここでは省略
-
-                    // データベースに新しいユーザーを格納し、最新の状態を返す（採番されたidが入る）
+                    newUser.setDisplayName(displayName);
+                    newUser.setCreatedAccountAt(createdAccountAt);
+                    newUser.setFollowersCount(1);
+                    newUser.setFollowingCount(1);
+                    // timestamp型変換が必要ですが、一旦Userエンティティ側で今は設定しないならOK
+                    // newUser.setCreatedAt(ZonedDateTime.now());
+                    
                     authorUser = userDao.save(newUser);
-
-                }else{
+                } else {
                     authorUser = ExistingUser.get();
                 }
+
+                // 2. ポストの処理
                 Post newPost = new Post();
+                newPost.setUri(uri);
                 newPost.setCid(cid);
-                newPost.setUri (uri);
-                newPost.setCid (cid);
-                newPost.setText (text);
-                newPost.setCreated_at (createdAt);
-                newPost.setIndexed_at (indexedAt);
-                newPost.setLanguage (String.join(",",langs));
-                if (label != null && !label.isEmpty()){
-                    newPost.setLabel (String.join(",",label));
-                }else{newPost.setLabel("");}
+                newPost.setText(text);
+                newPost.setCreatedAt(createdAt); // Stringのまま保存
+                newPost.setIndexedAt(indexedAt);
+                
+                // List<String> をカンマ区切り文字列に変換
+                if (langs != null) {
+                    newPost.setLanguage(String.join(",", langs));
+                } else {
+                    newPost.setLanguage("");
+                }
+                
+                // // label処理（今は空文字）
+                // newPost.setLabel("");
 
                 newPost.setReplyCount(replyCount);
                 newPost.setRepostCount(repostCount);
                 newPost.setLikeCount(likeCount);
-                newPost.setAuthor_id (authorUser.getId());// 格納されたUserエンティティからIDを取得
                 newPost.setBookmarkCount(bookmarkCount);
                 newPost.setQuoteCount(quoteCount);
+                
+                newPost.setAuthorId(authorUser.getId()); // ユーザーIDをセット
 
-                postDao.save(newPost);
-
+                // 重複チェック
+                Optional<Post> existingPost = postDao.findByUri(uri);
+                if (existingPost.isEmpty()) {
+                    postDao.save(newPost);
+                    System.out.println("Saved post: " + text); // デバッグ用ログ
+                } else {
+                    // 更新処理などを入れたい場合はここに記述
+                    // System.out.println("Skipped duplicate post: " + uri);
+                }
             }
-        }catch(JacksonException e){
+        } catch(JacksonException e){
+            e.printStackTrace();
+        } catch(Exception e) {
+            // その他の予期せぬエラーもキャッチしておくと安心
             e.printStackTrace();
         }
     }
-    
 }
 
     // stereotype
@@ -133,3 +160,13 @@ public class BlueskyDataProcessor {
     // デシリアライズ（読み込み）:
     // JSON文字列 を解析して、Javaのオブジェクトに変換します。
     // 例：{"id": 1, "name": "alice"} → Userオブジェクト
+
+//   FeedResponse (全体)
+//  └─ feed (List<ItemFeedJson>)
+//      └─ ItemFeedJson (1つの要素)
+//          └─ post (PostViewJson / DBのViewのようなもの)
+//              ├─ author (AuthorJson / 投稿者情報) ★ここにAuthorがいる
+//              ├─ uri, cid, likeCount (メタデータ) ★ここにカウント数がある
+//              └─ record (PostRecordJson / 生データ)
+//                  ├─ text (本文) ★ここに本文がある
+//                  └─ createdAt (作成日)

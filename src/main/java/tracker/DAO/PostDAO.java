@@ -1,5 +1,7 @@
 package tracker.DAO;
 
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 // CrudRepositoryをインポート
 // データベースの基本操作（CRUD）を自動化するためのインターフェースです。
@@ -18,7 +20,8 @@ public interface PostDAO extends CrudRepository<Post, Integer> {
     
     // insertPost() の実装は不要！
     // 必要なメソッドはすべて CrudRepository が自動で提供してくれる。
-    
+    Optional<Post>  findByUri(String uri);
+
 }
 
 // package DAO;
