@@ -1,13 +1,18 @@
 package tracker.processor;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import tracker.DAO.PostDAO;
+import tracker.DAO.PostTagDAO;
+import tracker.DAO.TagDAO;
 import tracker.DAO.UserDAO;
 import tracker.model.Post;
+import tracker.model.PostTag;
+import tracker.model.Tag;
 import tracker.model.User;
 import tracker.processor.api_model.FeedResponse;
 import tracker.processor.api_model.ItemFeedJson;
@@ -18,11 +23,17 @@ import tracker.processor.api_model.PostViewJson;
 public class BlueskyDataProcessor {
     private final UserDAO userDao;
     private final PostDAO postDao;
+    private final TagDAO tagDao;
+    private final PostTagDAO postTagDao;
     private final ObjectMapper objectMapper;
     
-    public BlueskyDataProcessor(UserDAO userDao, PostDAO postDao, ObjectMapper objectMapper){
+    public BlueskyDataProcessor(UserDAO userDao, PostDAO postDao,
+        TagDAO tagDao, PostTagDAO postTagDao,
+         ObjectMapper objectMapper){
         this.userDao = userDao;
         this.postDao = postDao;
+        this.tagDao = tagDao; 
+        this.postTagDao = postTagDao; 
         this.objectMapper = objectMapper;
     }
     
@@ -87,10 +98,11 @@ public class BlueskyDataProcessor {
                     // newUser.setCreatedAt(ZonedDateTime.now());
                     
                     authorUser = userDao.save(newUser);
+
                 } else {
                     authorUser = ExistingUser.get();
                 }
-
+                
                 // 2. ポストの処理
                 Post newPost = new Post();
                 newPost.setUri(uri);
@@ -108,7 +120,7 @@ public class BlueskyDataProcessor {
                 
                 // // label処理（今は空文字）
                 // newPost.setLabel("");
-
+                
                 newPost.setReplyCount(replyCount);
                 newPost.setRepostCount(repostCount);
                 newPost.setLikeCount(likeCount);
@@ -116,12 +128,39 @@ public class BlueskyDataProcessor {
                 newPost.setQuoteCount(quoteCount);
                 
                 newPost.setAuthorId(authorUser.getId()); // ユーザーIDをセット
-
+                
                 // 重複チェック
                 Optional<Post> existingPost = postDao.findByUri(uri);
                 if (existingPost.isEmpty()) {
-                    postDao.save(newPost);
-                    System.out.println("Saved post: " + text); // デバッグ用ログ
+                    Post savedPost = postDao.save(newPost); // ★saveの戻り値を受け取る(IDが入っている)
+                    System.out.println("Saved post: " + text);
+                    // ==========================================
+                    // タグ保存処理を追加
+                    // ==========================================
+                    
+                    // 1. テキストからタグ文字列のリストを抽出
+                    List<String> hashtagList = extractHashtags(text);
+    
+                    for (String tagStr : hashtagList) {
+                        // 2. タグマスタ(tagsテーブル)の処理
+                        Tag tagEntity;
+                        Optional<Tag> existingTag = tagDao.findByTag(tagStr);
+    
+                        if (existingTag.isPresent()) { //optionalの中身があるかどうか判定する
+                            tagEntity = existingTag.get();
+                        } else {
+                            // 新しいタグなら保存
+                            Tag newTag = new Tag();
+                            newTag.setTag(tagStr);
+                            tagEntity = tagDao.save(newTag);
+                        }
+    
+                        // 3. 中間テーブル(post_tags)の処理
+                        // PostのIDと、TagのIDを紐付ける
+                        PostTag relation = new PostTag(savedPost.getId(), tagEntity.getId());
+                        postTagDao.save(relation);
+                    }
+                    // ==========================================
                 } else {
                     // 更新処理などを入れたい場合はここに記述
                     // System.out.println("Skipped duplicate post: " + uri);
@@ -134,6 +173,60 @@ public class BlueskyDataProcessor {
             e.printStackTrace();
         }
     }
+
+    private List<String> extractHashtags(String text) {
+        if (text == null || text.isBlank()) return List.of(); //「空の固定リスト」を返す(immutable)
+
+        return Pattern.compile("#[^\\s]+") //Stream API
+                .matcher(text)
+                .results() // Stream<MatchResult>を取得
+                .map(match -> match.group().replaceAll("[.,!?。、]$", "")) //map：結果を加工する
+                // ラムダ式：関数の引数 -> 処理の内容
+                .distinct() // 重複削除
+                .toList(); // Listに変換
+    }
+
+// text.isEmpty()
+// 文字数が 「完全に0」 のときだけ true になります。
+// ""（空文字） → true
+// " "（スペースのみ） → false（中身があると判定される）
+// text.isBlank()（Java 11以降）
+// 文字が0、または 「空白（スペース、タブ、全角スペースなど）だけ」 の場合も true になります。
+
+// private List<String> extractHashtags(String text) {
+//     List<String> tags = new ArrayList<>();
+//     if (text == null || text.isEmpty()) {
+//         return tags;  //new ArrayList<>() を返す
+//     }
+
+//     // 正規表現のコンパイル
+//     // "#" : #で始まる
+//     // "[^\\s]+" : 空白文字(\s)以外の文字(^)が1回以上続く(+)
+//     // ※日本語対応のため、単純な \w ではなく「空白以外」で判定するのがコツです
+//     Pattern pattern = Pattern.compile("#[^\\s]+");
+//     Matcher matcher = pattern.matcher(text);
+
+//     // 見つかるたびにループする
+//     while (matcher.find()) {  //find:文中を検索しtextが見つかれば true を返す
+//         String rawTag = matcher.group(); // group: 見つかった具体的な文字列（例：#Java,）を抜き出す
+
+//         // 末尾の記号（句読点など）を取り除く処理が必要
+//         // 例: "こんにちは #Bluesky." -> "#Bluesky." -> "#Bluesky"
+//         // ここでは簡単に、英数字・日本語以外の末尾記号を削除する簡易処理を入れます
+//         // (厳密にやるならもっと複雑になりますが、まずはこれで十分動きます)
+//         String cleanTag = rawTag.replaceAll("[.,!?。、]$", "");
+//         // [ ] の中の文字（カンマ、ドット、感嘆符、句読点など）のいずれかが、
+//         // $（文字列の末尾）にある場合、
+//         // ""（空文字）に置き換えて削除します。
+        
+//         // 重複を防ぐため、リストになければ追加
+//         if (!tags.contains(cleanTag)) {
+//             tags.add(cleanTag);
+//         }
+//     }
+//     return tags;
+// }
+
 }
 
     // stereotype
