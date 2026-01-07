@@ -47,7 +47,7 @@ return """
                     "parent":{"cid":"baybaybay","uri":"at://did:plc:qqqq/app.bsky.feed.post/vvvvvv"},
                     "root":{"cid":"rererere","uri":"at://did:plc:qqqq/app.bsky.feed.post/hhhhhhhh"}
                 },
-                "text":"HEHEHE"
+                "text":"HEHEHE #endregion #こんにちは。"
             },
             "embed":{
                 "$type":"app.bsky.embed.video#view",
