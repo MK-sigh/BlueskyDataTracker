@@ -106,7 +106,7 @@
                         "parent":{"cid":"rererere","uri":"at://did:plc:qqqq/app.bsky.feed.post/hhhhhhhh"},
                         "root":{"cid":"rererere","uri":"at://did:plc:qqqq/app.bsky.feed.post/hhhhhhhh"}
                     },
-                    "text":"SOSOSO"
+                    "text":"SOSOSO #abcde #e09rew"
                 },
                 "embed":{
                     "$type":"app.bsky.embed.record#view",
