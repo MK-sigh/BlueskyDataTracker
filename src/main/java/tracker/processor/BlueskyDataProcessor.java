@@ -1,7 +1,8 @@
 package tracker.processor;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
@@ -67,6 +68,7 @@ public class BlueskyDataProcessor {
                 String text = record.getText();
                 String createdAt = record.getCreatedAt();
                 List<String> langs = record.getLangs();
+                List<Map<String,Object>> facets = record.getFacets();
 
                 // ポストのメタ情報（Viewにある情報）
                 String uri = postView.getUri();
@@ -132,8 +134,11 @@ public class BlueskyDataProcessor {
                     // タグ保存処理を追加
                     // ==========================================
                     
+
+
+
                     // 1. テキストからタグ文字列のリストを抽出
-                    List<String> hashtagList = extractHashtags(text);
+                    List<String> hashtagList = extractHashtags(facets);
     
                     for (String tagStr : hashtagList) {
                         // 2. タグマスタ(tagsテーブル)の処理
@@ -171,19 +176,37 @@ public class BlueskyDataProcessor {
         }
     }
 
-    private List<String> extractHashtags(String text) {
-        if (text == null || text.isBlank()) return List.of(); //「空の固定リスト」を返す(immutable)
+    // private List<String> extractHashtags(String text) {
+    //     if (text == null || text.isBlank()) return List.of(); //「空の固定リスト」を返す(immutable)
 
-        return Pattern.compile("#[\\p{L}\\p{N}_]+") //正規表現のコンパイル Stream API
-                .matcher(text)
-                .results() // Stream<MatchResult>を取得
-                .map(match -> match.group())
-                .map(String::toLowerCase)  
-                // map：結果を加工する
-                // ラムダ式：関数の引数 -> 処理の内容
-                .distinct() // 重複削除
-                .toList(); // Listに変換
-    }
+    //     return Pattern.compile("#[\\p{L}\\p{N}_]+") //正規表現のコンパイル Stream API
+    //             .matcher(text)
+    //             .results() // Stream<MatchResult>を取得
+    //             .map(match -> match.group())
+    //             .map(String::toLowerCase)  
+    //             // map：結果を加工する
+    //             // ラムダ式：関数の引数 -> 処理の内容
+    //             .distinct() // 重複削除
+    //             .toList(); // Listに変換
+    // }
+private List<String> extractHashtags(List<Map<String, Object>> facets) {
+    if (facets == null) return List.of();
+
+    List<String> tags = facets.stream()
+                        // 1. 各facetから "features"という名前のリストを取り出す
+                        .map(facet ->  (List<Map<String, Object>>) facet.get("features"))
+                        // 2. nullチェック（念のため）
+                        .filter(Objects::nonNull)
+                        // 3. List<List<...>> を平坦化して、中の要素（Map）を直接扱えるようにする
+                        .flatMap(List::stream)
+                        // 4. Mapから "tag" の値を取り出す
+                        .map(feature -> (String) feature.get("tag"))
+                        // 5. tagが存在するものだけ絞り込む
+                        .filter(Objects::nonNull)
+                        // 6. 最後にListにまとめる
+                        .toList();
+    return tags;
+}
 
 // text.isEmpty()
 // 文字数が 「完全に0」 のときだけ true になります。
