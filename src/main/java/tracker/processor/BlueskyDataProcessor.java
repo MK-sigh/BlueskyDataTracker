@@ -37,7 +37,7 @@ public class BlueskyDataProcessor {
         this.objectMapper = objectMapper;
     }
     
-    public void processFeed (String jsonText){
+    public String processFeed (String jsonText){
         try{
             User authorUser;
             
@@ -45,7 +45,7 @@ public class BlueskyDataProcessor {
             FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
             
             // 2. 投稿リストのループ処理
-            if (response.getFeed() == null) return; // feedが空の場合のガード
+            if (response.getFeed() == null) return ""; // feedが空の場合のガード
 
             for (ItemFeedJson item : response.getFeed()) {
                 
@@ -67,13 +67,11 @@ public class BlueskyDataProcessor {
                 String text = record.getText();
                 String createdAt = record.getCreatedAt();
                 List<String> langs = record.getLangs();
-                // labelは今Recordに定義がないようなので一旦スキップ、必要ならPostRecordJsonに追加
 
                 // ポストのメタ情報（Viewにある情報）
                 String uri = postView.getUri();
                 String cid = postView.getCid();
                 
-                // indexedAtはViewにある場合とRecordにある場合がありますが、一旦Viewになければ無視
                 String indexedAt = postView.getIndexedAt();
                 int replyCount = postView.getReplyCount();
                 int repostCount = postView.getRepostCount();
@@ -95,7 +93,6 @@ public class BlueskyDataProcessor {
                     newUser.setFollowersCount(1);
                     newUser.setFollowingCount(1);
                     // timestamp型変換が必要ですが、一旦Userエンティティ側で今は設定しないならOK
-                    // newUser.setCreatedAt(ZonedDateTime.now());
                     
                     authorUser = userDao.save(newUser);
 
@@ -117,9 +114,6 @@ public class BlueskyDataProcessor {
                 } else {
                     newPost.setLanguage("");
                 }
-                
-                // // label処理（今は空文字）
-                // newPost.setLabel("");
                 
                 newPost.setReplyCount(replyCount);
                 newPost.setRepostCount(repostCount);
@@ -166,21 +160,26 @@ public class BlueskyDataProcessor {
                     // System.out.println("Skipped duplicate post: " + uri);
                 }
             }
+            return response.getCursor();
         } catch(JacksonException e){
             e.printStackTrace();
+            return "";
         } catch(Exception e) {
             // その他の予期せぬエラーもキャッチしておくと安心
             e.printStackTrace();
+            return "";
         }
     }
 
     private List<String> extractHashtags(String text) {
         if (text == null || text.isBlank()) return List.of(); //「空の固定リスト」を返す(immutable)
 
-        return Pattern.compile("#[^\\s]+") //Stream API
+        return Pattern.compile("#[\\p{L}\\p{N}_]+") //正規表現のコンパイル Stream API
                 .matcher(text)
                 .results() // Stream<MatchResult>を取得
-                .map(match -> match.group().replaceAll("[.,!?。、]$", "")) //map：結果を加工する
+                .map(match -> match.group())
+                .map(String::toLowerCase)  
+                // map：結果を加工する
                 // ラムダ式：関数の引数 -> 処理の内容
                 .distinct() // 重複削除
                 .toList(); // Listに変換
