@@ -16,7 +16,6 @@ import tracker.model.PostTag;
 import tracker.model.Tag;
 import tracker.model.User;
 import tracker.processor.api_model.FeedResponse;
-import tracker.processor.api_model.ItemFeedJson;
 import tracker.processor.api_model.PostRecordJson;
 import tracker.processor.api_model.PostViewJson;
 
@@ -41,17 +40,20 @@ public class BlueskyDataProcessor {
     public String processFeed (String jsonText){
         try{
             User authorUser;
-            
+            // ログを追加して動作確認しやすくします
+            System.out.println("JSON Length: " + jsonText.length());
             // 1. JSONパース
             FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
             
             // 2. 投稿リストのループ処理
-            if (response.getFeed() == null) return ""; // feedが空の場合のガード
+            if (response.getPosts() == null|| response.getPosts().isEmpty())
+                return ""; // feedが空の場合のガード
 
-            for (ItemFeedJson item : response.getFeed()) {
+            System.out.println("Found " + response.getPosts().size() + " posts.");
+
+            for (PostViewJson postView : response.getPosts()) {
                 
-                // ★階層の整理: Item -> PostView -> (Author, Record)
-                PostViewJson postView = item.getPost(); // ここで "post" (View) を取得
+                // ★階層の整理: PostView -> (Author, Record)
                 if (postView == null) continue;
 
                 // ユーザー情報の抽出（PostViewJsonの中にAuthorがいる）
@@ -104,6 +106,15 @@ public class BlueskyDataProcessor {
                 
                 // 2. ポストの処理
                 Post newPost = new Post();
+
+                // --- ★デバッグ用ログの追加 ---
+                System.out.println("--- 💥 DB SAVE DEBUG ---");
+                System.out.println("URI: " + newPost.getUri());
+                // 文字列内のヌル文字を視覚化するために置換してから出力する
+                System.out.println("Text (NUL replaced): " + newPost.getText().replace("\u0000", "null"));
+                System.out.println("--- -------------------");
+                // -----------------------------
+
                 newPost.setUri(uri);
                 newPost.setCid(cid);
                 newPost.setText(text);
@@ -133,18 +144,15 @@ public class BlueskyDataProcessor {
                     // ==========================================
                     // タグ保存処理を追加
                     // ==========================================
-                    
-
-
 
                     // 1. テキストからタグ文字列のリストを抽出
                     List<String> hashtagList = extractHashtags(facets);
-    
+
                     for (String tagStr : hashtagList) {
                         // 2. タグマスタ(tagsテーブル)の処理
                         Tag tagEntity;
                         Optional<Tag> existingTag = tagDao.findByTag(tagStr);
-    
+
                         if (existingTag.isPresent()) { //optionalの中身があるかどうか判定する
                             tagEntity = existingTag.get();
                         } else {
@@ -153,7 +161,7 @@ public class BlueskyDataProcessor {
                             newTag.setTag(tagStr);
                             tagEntity = tagDao.save(newTag);
                         }
-    
+
                         // 3. 中間テーブル(post_tags)の処理
                         // PostのIDと、TagのIDを紐付ける
                         PostTag relation = new PostTag(savedPost.getId(), tagEntity.getId());
