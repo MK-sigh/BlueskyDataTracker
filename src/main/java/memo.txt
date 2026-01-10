@@ -1,7 +1,0 @@
-パッケージ	役割	変更要因
-model	データベースの構造	DBスキーマの変更
-processor (Service)	アプリケーションの業務処理	ビジネス要件の変更
-processor.api_model	JSONパース用の一時データ	外部APIのJSON構造の変更
-client	外部との通信処理	APIのエンドポイント、認証方法、HTTPクライアントライブラリの変更
-
-

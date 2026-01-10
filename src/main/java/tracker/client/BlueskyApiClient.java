@@ -7,19 +7,22 @@ import org.springframework.web.client.RestClient;
 public class BlueskyApiClient {
     
     // 取得したいAPIエンドポイント
-    private static final String API_URL = "https://bsky.social/xrpc/app.bsky.feed.getTimeline";
-    
+    private static final String API_URL =
+    "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=%23" +
+    "エンジニア"+
+    "&limit=100";
+
     // HTTPクライアント
     private final RestClient restClient;
 
-    // コンストラクタで必要な依存性を注入する（今回は省略）
+    // コンストラクタ
     public BlueskyApiClient(RestClient restClient){this.restClient = restClient;}
 
     public String fetchFeedJson(String cursor) {
         String uri = API_URL + "?limit=50";
-        if (cursor != null) {
-            uri += "&cursor=" + cursor;
-        }
+        // if (cursor != null) {
+        //     uri += "&cursor=" + cursor;
+        // }
         //外部のAPI（API_URL）に対して、『50件分データをください』というリクエストを送り、
         // 返ってきたデータ（JSONなど）を文字列として取得する
         return restClient.get()
