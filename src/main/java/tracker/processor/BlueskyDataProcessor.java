@@ -62,6 +62,7 @@ public class BlueskyDataProcessor {
                 String handle = postView.getAuthor().getHandle();
                 String displayName = postView.getAuthor().getDisplayName();
                 String createdAccountAt = postView.getAuthor().getCreatedAt();
+                System.out.println(did+handle);
 
                 // ポストの中身（Record）の抽出
                 PostRecordJson record = postView.getRecord(); // ★先ほど名前を変えたメソッド
@@ -71,6 +72,8 @@ public class BlueskyDataProcessor {
                 String createdAt = record.getCreatedAt();
                 List<String> langs = record.getLangs();
                 List<Map<String,Object>> facets = record.getFacets();
+
+                System.out.println(text);
 
                 // ポストのメタ情報（Viewにある情報）
                 String uri = postView.getUri();
@@ -94,8 +97,6 @@ public class BlueskyDataProcessor {
                     newUser.setHandle(handle);
                     newUser.setDisplayName(displayName);
                     newUser.setCreatedAccountAt(createdAccountAt);
-                    newUser.setFollowersCount(1);
-                    newUser.setFollowingCount(1);
                     // timestamp型変換が必要ですが、一旦Userエンティティ側で今は設定しないならOK
                     
                     authorUser = userDao.save(newUser);
@@ -106,15 +107,6 @@ public class BlueskyDataProcessor {
                 
                 // 2. ポストの処理
                 Post newPost = new Post();
-
-                // --- ★デバッグ用ログの追加 ---
-                System.out.println("--- 💥 DB SAVE DEBUG ---");
-                System.out.println("URI: " + newPost.getUri());
-                // 文字列内のヌル文字を視覚化するために置換してから出力する
-                System.out.println("Text (NUL replaced): " + newPost.getText().replace("\u0000", "null"));
-                System.out.println("--- -------------------");
-                // -----------------------------
-
                 newPost.setUri(uri);
                 newPost.setCid(cid);
                 newPost.setText(text);
