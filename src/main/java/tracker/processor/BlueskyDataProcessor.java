@@ -40,8 +40,6 @@ public class BlueskyDataProcessor {
     public String processFeed (String jsonText){
         try{
             User authorUser;
-            // ログを追加して動作確認しやすくします
-            System.out.println("JSON Length: " + jsonText.length());
             // 1. JSONパース
             FeedResponse response = objectMapper.readValue(jsonText, FeedResponse.class);
             
@@ -49,23 +47,20 @@ public class BlueskyDataProcessor {
             if (response.getPosts() == null|| response.getPosts().isEmpty())
                 return ""; // feedが空の場合のガード
 
-            System.out.println("Found " + response.getPosts().size() + " posts.");
+            System.out.println("Found " + response.getPosts().size() + " posts.");//取得ログ件数
 
             for (PostViewJson postView : response.getPosts()) {
-                
-                // ★階層の整理: PostView -> (Author, Record)
                 if (postView == null) continue;
-
+                // ★階層の整理: PostView -> (Author, Record)
                 // ユーザー情報の抽出（PostViewJsonの中にAuthorがいる）
                 if (postView.getAuthor() == null) continue;
                 String did = postView.getAuthor().getDid();
                 String handle = postView.getAuthor().getHandle();
                 String displayName = postView.getAuthor().getDisplayName();
                 String createdAccountAt = postView.getAuthor().getCreatedAt();
-                System.out.println(did+handle);
 
                 // ポストの中身（Record）の抽出
-                PostRecordJson record = postView.getRecord(); // ★先ほど名前を変えたメソッド
+                PostRecordJson record = postView.getRecord();
                 if (record == null) continue;
 
                 String text = record.getText();
@@ -73,12 +68,16 @@ public class BlueskyDataProcessor {
                 List<String> langs = record.getLangs();
                 List<Map<String,Object>> facets = record.getFacets();
 
-                System.out.println(text);
-
+                System.out.println("ここはテキストです。"+text);
+                System.out.println("createdAT:"+createdAt);
+                System.out.println("langs:"+langs);
+                
                 // ポストのメタ情報（Viewにある情報）
                 String uri = postView.getUri();
+                System.out.println(uri);
                 String cid = postView.getCid();
-                
+                System.out.println(cid);
+
                 String indexedAt = postView.getIndexedAt();
                 int replyCount = postView.getReplyCount();
                 int repostCount = postView.getRepostCount();
@@ -97,14 +96,11 @@ public class BlueskyDataProcessor {
                     newUser.setHandle(handle);
                     newUser.setDisplayName(displayName);
                     newUser.setCreatedAccountAt(createdAccountAt);
-                    // timestamp型変換が必要ですが、一旦Userエンティティ側で今は設定しないならOK
-                    
                     authorUser = userDao.save(newUser);
-
                 } else {
                     authorUser = ExistingUser.get();
                 }
-                
+
                 // 2. ポストの処理
                 Post newPost = new Post();
                 newPost.setUri(uri);
@@ -133,9 +129,6 @@ public class BlueskyDataProcessor {
                 if (existingPost.isEmpty()) {
                     Post savedPost = postDao.save(newPost); // ★saveの戻り値を受け取る(IDが入っている)
                     System.out.println("Saved post: " + text);
-                    // ==========================================
-                    // タグ保存処理を追加
-                    // ==========================================
 
                     // 1. テキストからタグ文字列のリストを抽出
                     List<String> hashtagList = extractHashtags(facets);

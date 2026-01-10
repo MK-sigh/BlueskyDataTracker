@@ -1,4 +1,5 @@
 package tracker.model;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,11 +14,11 @@ public class Post {
     private int id; // SERIAL PRIMARY KEY に対応
     private String uri;
     private String cid;
-    private String text; // TEXT NOT NULL に対応
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String text;
     private String createdAt; // TIMESTAMP WITH TIME ZONE NOT NULL に対応
     private String indexedAt;
     private String language;
-    // private String label;
     private int bookmarkCount;
     private int replyCount;
     private int repostCount;
@@ -39,7 +40,6 @@ public class Post {
             this.createdAt = createdAt;
             this.indexedAt = indexedAt;
             this.language = language;
-            // this.label = label;
             this.bookmarkCount = bookmarkCount;
             this.replyCount = replyCount;
             this.repostCount = repostCount;
@@ -68,9 +68,6 @@ public class Post {
 
     public String getLanguage() {return language;}
     public void setLanguage(String language) {this.language = language;}
-
-    // public String getLabel() {return label;}
-    // public void setLabel(String label) {this.label = label;}
 
     public int getBookmarkCount() { return bookmarkCount; }
     public void setBookmarkCount(int bookmarkCount) { this.bookmarkCount = bookmarkCount; }
