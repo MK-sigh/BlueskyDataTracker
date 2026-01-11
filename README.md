@@ -1,4 +1,4 @@
-# Bluesky Tech Tracker
+# Bluesky Data Tracker
 
 Blueskyから特定の技術系ハッシュタグ（現在は `#エンジニア`）を含む投稿を定期的に取得し、データベースに保存するSpring Bootアプリケーションです。
 
