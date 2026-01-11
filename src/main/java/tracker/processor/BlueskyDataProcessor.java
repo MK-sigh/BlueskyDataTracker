@@ -69,7 +69,7 @@ public class BlueskyDataProcessor {
 
                 String text = record.getText();
 
-                if (!text.contains("#" + searchTag)) continue;
+                // if (!text.contains("#" + searchTag)) continue;
 
 
                 String createdAt = record.getCreatedAt();

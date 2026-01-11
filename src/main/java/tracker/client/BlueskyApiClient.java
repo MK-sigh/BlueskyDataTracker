@@ -8,7 +8,7 @@ public class BlueskyApiClient {
     
     // 取得したいAPIエンドポイント
     private static final String API_URL =
-    "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?q={q}&limit={limit}";
+    "https://api.bsky.app/xrpc/app.bsky.feed.searchposts?q={q}&limit={limit}";
 
     // HTTPクライアント
     private final RestClient restClient;
@@ -20,13 +20,14 @@ public class BlueskyApiClient {
         String query = "#エンジニア";
         int limit = 100;
         
-        // if (cursor != null) {
-        //     uri += "&cursor=" + cursor;
-        // }
+        String url = API_URL;
+        if (cursor != null) {
+            url += "&cursor=" + cursor;
+        }
         //外部のAPI（API_URL）に対して、『50件分データをください』というリクエストを送り、
         // 返ってきたデータ（JSONなど）を文字列として取得する
         return restClient.get()
-            .uri(API_URL, query, limit)
+            .uri(url, query, limit)
             .retrieve()
             .body(String.class);
     }
