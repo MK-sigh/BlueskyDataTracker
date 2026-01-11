@@ -42,9 +42,3 @@ public class User {
 
 
 }
-
-// id	SERIAL	PRIMARY KEY	主キー（連番）
-// did	VARCHAR(255)	UNIQUE, NOT NULL	Bluesky特有のID
-// handle	VARCHAR(255)	NOT NULL	ユーザー名
-// displayName	VARCHAR(255)		表示名
-// createdAccountAt	TIMESTAMP	NOT NULL	追加：アカウント作成日時
