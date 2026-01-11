@@ -171,19 +171,7 @@ public class BlueskyDataProcessor {
         }
     }
 
-    // private List<String> extractHashtags(String text) {
-    //     if (text == null || text.isBlank()) return List.of(); //「空の固定リスト」を返す(immutable)
 
-    //     return Pattern.compile("#[\\p{L}\\p{N}_]+") //正規表現のコンパイル Stream API
-    //             .matcher(text)
-    //             .results() // Stream<MatchResult>を取得
-    //             .map(match -> match.group())
-    //             .map(String::toLowerCase)  
-    //             // map：結果を加工する
-    //             // ラムダ式：関数の引数 -> 処理の内容
-    //             .distinct() // 重複削除
-    //             .toList(); // Listに変換
-    // }
 private List<String> extractHashtags(List<Map<String, Object>> facets) {
     if (facets == null) return List.of();
 
@@ -201,82 +189,5 @@ private List<String> extractHashtags(List<Map<String, Object>> facets) {
                         // 6. 最後にListにまとめる
                         .toList();
     return tags;
+    }
 }
-
-// text.isEmpty()
-// 文字数が 「完全に0」 のときだけ true になります。
-// ""（空文字） → true
-// " "（スペースのみ） → false（中身があると判定される）
-// text.isBlank()（Java 11以降）
-// 文字が0、または 「空白（スペース、タブ、全角スペースなど）だけ」 の場合も true になります。
-
-// private List<String> extractHashtags(String text) {
-//     List<String> tags = new ArrayList<>();
-//     if (text == null || text.isEmpty()) {
-//         return tags;  //new ArrayList<>() を返す
-//     }
-
-//     // 正規表現のコンパイル
-//     // "#" : #で始まる
-//     // "[^\\s]+" : 空白文字(\s)以外の文字(^)が1回以上続く(+)
-//     // ※日本語対応のため、単純な \w ではなく「空白以外」で判定するのがコツです
-//     Pattern pattern = Pattern.compile("#[^\\s]+");
-//     Matcher matcher = pattern.matcher(text);
-
-//     // 見つかるたびにループする
-//     while (matcher.find()) {  //find:文中を検索しtextが見つかれば true を返す
-//         String rawTag = matcher.group(); // group: 見つかった具体的な文字列（例：#Java,）を抜き出す
-
-//         // 末尾の記号（句読点など）を取り除く処理が必要
-//         // 例: "こんにちは #Bluesky." -> "#Bluesky." -> "#Bluesky"
-//         // ここでは簡単に、英数字・日本語以外の末尾記号を削除する簡易処理を入れます
-//         // (厳密にやるならもっと複雑になりますが、まずはこれで十分動きます)
-//         String cleanTag = rawTag.replaceAll("[.,!?。、]$", "");
-//         // [ ] の中の文字（カンマ、ドット、感嘆符、句読点など）のいずれかが、
-//         // $（文字列の末尾）にある場合、
-//         // ""（空文字）に置き換えて削除します。
-        
-//         // 重複を防ぐため、リストになければ追加
-//         if (!tags.contains(cleanTag)) {
-//             tags.add(cleanTag);
-//         }
-//     }
-//     return tags;
-// }
-
-}
-
-    // stereotype
-    // Spring Frameworkにおいて「ビジネスロジック（業務処理）」を担当するクラスであることを示すための目印です。
-    // 1. 主な役割
-    // ビジネスロジックの記述: 「データの計算」「複数のリポジトリを組み合わせた処理」「外部APIとの連携」など、
-    // そのアプリの「核」となる処理をここに書きます。
-    // Bean（ビーン）の自動登録: このアノテーションを付けると、Springが起動時に自動的にクラスを見つけ出し、
-    // インスタンス化して管理下に置きます。
-    // これにより、他のクラス（Controllerなど）で @Autowired などを使って呼び出せるようになります。
-    // 2. どこで使うのか（3層アーキテクチャ）
-    // 一般的なSpring Bootアプリは、役割ごとに3つの層に分けます。@Service はその真ん中に位置します。
-    // Controller (@RestController): 画面やAPIの窓口。リクエストを受け取り、Serviceを呼ぶ。
-    // Service (@Service): ここ！ 窓口から届いたデータを使って、実際の処理（計算や判定など）を行う。
-    // Repository (@Repository / CrudRepository): データベースとのやり取りだけを行う。
-    
-    // objectMapper
-    // 「JavaオブジェクトとJSONを相互変換するライブラリ」 です。
-    // 1. 主な役割（2つの変換）
-    // Jackson（ObjectMapper）の役割は、大きく分けて2つです。
-    // シリアライズ（書き出し）:
-    // Javaのオブジェクトを JSON文字列 に変換します。
-    // 例：Userオブジェクト → {"id": 1, "name": "alice"}
-    // デシリアライズ（読み込み）:
-    // JSON文字列 を解析して、Javaのオブジェクトに変換します。
-    // 例：{"id": 1, "name": "alice"} → Userオブジェクト
-
-//   FeedResponse (全体)
-//  └─ feed (List<ItemFeedJson>)
-//      └─ ItemFeedJson (1つの要素)
-//          └─ post (PostViewJson / DBのViewのようなもの)
-//              ├─ author (AuthorJson / 投稿者情報) ★ここにAuthorがいる
-//              ├─ uri, cid, likeCount (メタデータ) ★ここにカウント数がある
-//              └─ record (PostRecordJson / 生データ)
-//                  ├─ text (本文) ★ここに本文がある
-//                  └─ createdAt (作成日)

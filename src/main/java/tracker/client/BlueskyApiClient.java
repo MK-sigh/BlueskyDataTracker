@@ -24,7 +24,7 @@ public class BlueskyApiClient {
         if (cursor != null) {
             url += "&cursor=" + cursor;
         }
-        //外部のAPI（API_URL）に対して、『50件分データをください』というリクエストを送り、
+        //外部のAPI（API_URL）に対してリクエストを送り、
         // 返ってきたデータ（JSONなど）を文字列として取得する
         return restClient.get()
             .uri(url, query, limit)

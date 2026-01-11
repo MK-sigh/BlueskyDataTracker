@@ -87,14 +87,3 @@ public class Post {
     public int getAuthorId() {return authorId;}
     public void setAuthorId(int authorId) {this.authorId = authorId;}
 }
-
-
-// カラム名	DB型	制約	変更点
-// id	SERIAL	PRIMARY KEY	主キー（連番）
-// uri	VARCHAR(255)	UNIQUE, NOT NULL	追加：投稿のユニークID
-// cid	VARCHAR(255)	NOT NULL	追加：コンテンツID（データ参照に必須）
-// text	TEXT	NOT NULL	投稿内容
-// createdAt	TIMESTAMP	NOT NULL	投稿日
-// indexedAt	TIMESTAMP	NOT NULL	追加：投稿がBlueskyにインデックスされた時刻
-// language	VARCHAR(10)	NOT NULL	言語
-// authorId	INTEGER	FK users(id)	投稿者ID
