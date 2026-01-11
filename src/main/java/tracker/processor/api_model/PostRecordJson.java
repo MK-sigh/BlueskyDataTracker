@@ -5,11 +5,10 @@ import java.util.Map;
 
 public class PostRecordJson {
     private String text;
-    private String createdAt; // JSON上の型に合わせてStringで受けるのが無難
+    private String createdAt; // JSON上の型に合わせてStringで受ける
     private List<String> langs;
     private List<Map<String, Object>> facets;
 
-    // Jacksonがパースできるように、デフォルトコンストラクタとゲッター/セッター（またはpublicフィールド）が必要です
     public PostRecordJson() {}
 
     public String getText() {return text;}

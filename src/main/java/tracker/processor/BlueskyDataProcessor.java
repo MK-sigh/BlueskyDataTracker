@@ -61,17 +61,21 @@ public class BlueskyDataProcessor {
 
                 // ポストの中身（Record）の抽出
                 PostRecordJson record = postView.getRecord();
-                if (record == null) continue;
+                if (record == null ||
+                    record.getFacets() == null ||
+                    record.getFacets().isEmpty() ||
+                    record.getText() == null ||
+                    record.getText().isBlank()) continue;
 
                 String text = record.getText();
+
+                if (!text.contains("#" + searchTag)) continue;
+
+
                 String createdAt = record.getCreatedAt();
                 List<String> langs = record.getLangs();
                 List<Map<String,Object>> facets = record.getFacets();
 
-                System.out.println("ここはテキストです。"+text);
-                System.out.println("createdAT:"+createdAt);
-                System.out.println("langs:"+langs);
-                
                 // ポストのメタ情報（Viewにある情報）
                 String uri = postView.getUri();
                 System.out.println(uri);
@@ -154,8 +158,6 @@ public class BlueskyDataProcessor {
                     }
                     // ==========================================
                 } else {
-                    // 更新処理などを入れたい場合はここに記述
-                    // System.out.println("Skipped duplicate post: " + uri);
                 }
             }
             return response.getCursor();
