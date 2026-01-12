@@ -5,10 +5,21 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>テンプレートプロジェクト</title>
-</head>
-<body>
-    <h1>JSP テンプレート動作確認ページ</h1>
-    <p><a href="HelloServlet">HelloServlet へ移動</a></p>
+<title>Bluesky Data Tracker</title>
+    <h2>ログイン</h2>
+
+    <!-- メッセージがある場合だけ表示する -->
+    <c:if test="${not empty errorMessage}">
+        <p style="color: red;">${errorMessage}</p>
+    </c:if>
+
+    <form action="/login" method="post">
+        ユーザー名: <input type="text" name="name"><br>
+        パスワード: <input type="password" name="pass"><br>
+        <button type="submit">ログイン</button>
+    </form>
+
+    <a href="resister">ユーザー登録</a>
+
 </body>
 </html>
