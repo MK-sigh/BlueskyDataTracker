@@ -8,6 +8,7 @@ import tracker.model.AdminUser;
 
 public interface AdminUserDAO extends CrudRepository<AdminUser, Integer> {
     
-    Optional<AdminUser>  findById(int id);
+    Optional<AdminUser>  findByName(String name);
+
     
 }
