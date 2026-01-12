@@ -26,8 +26,6 @@ public class Post {
     private int quoteCount;
     private int authorId; // INTEGER (外部キー) に対応
 
-    
-    
     public Post(){};
     public Post(int id, String uri, String cid, String text, String createdAt, 
         String indexedAt, String language,
