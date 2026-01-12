@@ -11,7 +11,7 @@ public interface UserDAO extends CrudRepository <User, Integer> {
 // findByDid と書くだけで、Spring は内部的に SELECT * FROM users WHERE did = ? という SQL を自動生成します。
 
     Optional<User> findByDid(String did);
-    Optional<User> findById(int did);
+    Optional<User> findById(int id);
 
 }
 
