@@ -19,7 +19,8 @@ public class FeedScheduler {
 
     @Scheduled(fixedRate = 300000)
     public void fetchAndProcessFeed(){
-        String jsonstr = apiClient.fetchFeedJson(cursor);
+        String query = "#エンジニア";
+        String jsonstr = apiClient.fetchFeedJson(query, cursor);
         cursor = dataProcessor.processFeed(jsonstr); // ★cursorを返す
 
     }

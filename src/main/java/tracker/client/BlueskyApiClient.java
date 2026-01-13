@@ -16,8 +16,15 @@ public class BlueskyApiClient {
     // コンストラクタ
     public BlueskyApiClient(RestClient restClient){this.restClient = restClient;}
 
-    public String fetchFeedJson(String cursor) {
-        String query = "#エンジニア";
+        /**
+     * 指定されたキーワードとカーソルでBluesky APIから投稿を取得します
+     * @param query 検索キーワード（例: #エンジニア）
+     * @param cursor 次のページへのポインタ（初回はnull）
+     * @return APIからのレスポンスJSON
+     */
+
+    public String fetchFeedJson(String query, String cursor) {
+
         int limit = 100;
         
         String url = API_URL;
