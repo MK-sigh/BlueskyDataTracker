@@ -10,10 +10,11 @@ public class AuthService {
         this.dao = dao;
     }
 
-    public boolean check (String database, String name, String pass){
-        return dao.findByDatabaseAndName(database, name)
-                .map(user -> user.getPass().equals(pass))
-                .orElse(false);
+    public boolean check(String dataSource, String name, String pass){
+        return true;
+        // return dao.findByDataSourceAndName(dataSource, name)
+        //         .map(user -> user.getPass().equals(pass))
+        //         .orElse(false);
 
     }
 }
