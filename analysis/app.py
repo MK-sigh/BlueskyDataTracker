@@ -6,7 +6,8 @@ import os
 from dotenv import load_dotenv
 
 # --- 設定 ---
-SPRINGBOOT_URL = "http://localhost:8501/api/v1/collector/run?"
+SPRINGBOOT_POST = "http://localhost:8080/api/v1/collector/run"
+SPRINGBOOT_GET = "http://localhost:8080/api/v1/collector/search"
 # DB接続情報
 # .envファイルを読み込む
 load_dotenv()
@@ -29,12 +30,17 @@ if st.sidebar.button("Spring Bootで収集開始"):
     with st.spinner("収集しています..."):
         try:
             # Spring BootのAPIを叩く
-            response = requests.get(SPRINGBOOT_URL, params={"q": query})
+            # params={"q": query} は URLパラメータとして送信される
+            # 1. まず POST を送ってデータを最新にする（収集）
+            response = requests.post(SPRINGBOOT_POST, params={"q": query})
             if response.status_code == 200:
                 st.sidebar.success("データ取得に成功しました。")
                 # st.sidebar.success(f"成功: {response.text}")
+                # 2. 収集が終わったら GET を送ってデータを取得する（表示）
+                search_res = requests.get(SPRINGBOOT_GET, params={"q": query})
             else:
                 st.sidebar.error(f"失敗: ステータスコード {response.status_code}")
+                print(f"エラー内容: {response.text}")
         except Exception as e:
             st.sidebar.error(f"エラー: {e}")
 
@@ -45,7 +51,7 @@ try:
     engine = create_engine(DB_URL)
 
     queries = {
-    "posts": "SELECT * FROM posts ORDER BY created_at DESC",
+    "posts": "SELECT * FROM posts WHERE word_id ORDER BY created_at DESC",
     "tag_counts": """
         SELECT tag AS ＃タグ ,COUNT(post_tags.tag_id) AS 投稿数 FROM tags
         LEFT JOIN post_tags ON post_tags.tag_id = tags.id
