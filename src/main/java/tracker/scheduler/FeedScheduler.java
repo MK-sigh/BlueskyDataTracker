@@ -21,7 +21,7 @@ public class FeedScheduler {
     public void fetchAndProcessFeed(){
         String query = "#エンジニア";
         String jsonstr = apiClient.fetchFeedJson(query, cursor);
-        cursor = dataProcessor.processFeed(jsonstr); // ★cursorを返す
+        cursor = dataProcessor.processFeed(jsonstr, query); // ★cursorを返す
 
     }
 
