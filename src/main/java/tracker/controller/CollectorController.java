@@ -44,7 +44,9 @@ public class CollectorController {
     @GetMapping("/search")
     public List<Post> searchPostsInDB(@RequestParam("q") String query) {
         // DBからキーワードに紐づく投稿リストを取得して返す
-        // ※実際には "#" + query で保存されているはずなので合わせる
-        return postRepository.findPostsByKeyword("#" + query);
+        // もし query に既に # が付いていなければ付ける
+        String searchTerm = query.startsWith("#") ? query : "#" + query;
+        return postRepository.findPostsByKeyword(searchTerm);
+       
     }
 }
