@@ -13,13 +13,13 @@ import tools.jackson.databind.ObjectMapper;
 import tracker.DAO.PostDAO;
 import tracker.DAO.PostSearchResultsDAO;
 import tracker.DAO.PostTagDAO;
-import tracker.DAO.SearchWordsDAO;
+import tracker.DAO.SearchWordDAO;
 import tracker.DAO.TagDAO;
 import tracker.DAO.UserDAO;
 import tracker.model.Post;
 import tracker.model.PostSearchResults;
 import tracker.model.PostTag;
-import tracker.model.SearchWords;
+import tracker.model.SearchWord;
 import tracker.model.Tag;
 import tracker.model.User;
 import tracker.processor.api_model.FeedResponse;
@@ -32,18 +32,18 @@ public class BlueskyDataProcessor {
     private final PostDAO postDao;
     private final TagDAO tagDao;
     private final PostTagDAO postTagDao;
-    private final SearchWordsDAO searchWordsDAO;
+    private final SearchWordDAO searchWordDAO;
     private final PostSearchResultsDAO postSearchResultsDAO;
     private final ObjectMapper objectMapper;
     
     public BlueskyDataProcessor(UserDAO userDao, PostDAO postDao,
-        TagDAO tagDao, PostTagDAO postTagDao, SearchWordsDAO searchWordsDAO,
+        TagDAO tagDao, PostTagDAO postTagDao, SearchWordDAO searchWordDAO,
         PostSearchResultsDAO postSearchResultsDAO, ObjectMapper objectMapper){
         this.userDao = userDao;
         this.postDao = postDao;
         this.tagDao = tagDao; 
         this.postTagDao = postTagDao; 
-        this.searchWordsDAO = searchWordsDAO;
+        this.searchWordDAO = searchWordDAO;
         this.postSearchResultsDAO = postSearchResultsDAO;
         this.objectMapper = objectMapper;
     }
@@ -52,11 +52,11 @@ public class BlueskyDataProcessor {
     public String processFeed (String jsonText, String query){
         // 検索語テーブル(search_words)のIDを確定させる
 
-        SearchWords searchWords = searchWordsDAO.findByWord(query)
+        SearchWord newWord = searchWordDAO.findByWord(query)
         .orElseGet(() -> {
-            SearchWords newWord = new SearchWords();
-            newWord.setWord(query); // クエリをセットする
-            return searchWordsDAO.save(newWord); // 保存してその結果を返す
+            SearchWord word = new SearchWord();
+            word.setWord(query); // クエリをセットする
+            return searchWordDAO.save(word); // 保存してその結果を返す
         });
         
         try{
@@ -185,11 +185,11 @@ public class BlueskyDataProcessor {
                 //検索結果としての紐付けを保存
                 LocalDateTime fetchedAt = LocalDateTime.now(); // 現在時刻をセット
                 PostSearchResults result =
-                    new PostSearchResults(searchWords.getId(), savedPost.getId(), fetchedAt);
+                    new PostSearchResults(newWord.getId(), savedPost.getId(), fetchedAt);
                     // 保存前に、すでに同じ「キーワードID」と「ポストID」の組み合わせがないか確認
                     boolean exists =
-                        postSearchResultsDAO.existsBySearchWordsIdAndPostId
-                            (searchWords.getId(), savedPost.getId());
+                        postSearchResultsDAO.existsBySearchWordIdAndPostId
+                            (newWord.getId(), savedPost.getId());
                     if (!exists) {
                         postSearchResultsDAO.save(result);
                     } else {

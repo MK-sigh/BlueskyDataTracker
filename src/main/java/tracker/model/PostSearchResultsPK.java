@@ -8,7 +8,7 @@ public class PostSearchResultsPK implements Serializable{
 
     // 主キーを構成するカラム名と型を合わせる
     private int postId;
-    private int searchWordsId;
+    private int searchWordId;
 
     public PostSearchResultsPK() {}
 
@@ -18,12 +18,12 @@ public class PostSearchResultsPK implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PostSearchResultsPK that = (PostSearchResultsPK) o;
-        return postId == that.postId && searchWordsId == that.searchWordsId;
+        return postId == that.postId && searchWordId == that.searchWordId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(postId, searchWordsId); //2つのIDを混ぜ合わせて「この組み合わせ専用の番号」を発行する
+        return Objects.hash(postId, searchWordId); //2つのIDを混ぜ合わせて「この組み合わせ専用の番号」を発行する
     }
 
 }

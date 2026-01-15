@@ -8,5 +8,5 @@ import tracker.model.PostSearchResultsPK;
 @Repository
 public interface PostSearchResultsDAO extends JpaRepository <PostSearchResults, PostSearchResultsPK>{
 
-    boolean existsBySearchWordsIdAndPostId(Integer searchWordsId, Integer postId);
+    boolean existsBySearchWordIdAndPostId(Integer searchWordId, Integer postId);
 }

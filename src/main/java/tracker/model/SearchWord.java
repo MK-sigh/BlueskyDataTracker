@@ -8,8 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "seach_words")
-public class SearchWords {
+@Table(name = "search_words")
+public class SearchWord {
 
     @Id // ★主キーであることを示す
     @GeneratedValue(strategy = GenerationType.IDENTITY) // ★DBのSERIAL（連番）に対応
@@ -17,8 +17,8 @@ public class SearchWords {
     @Column(unique = true, nullable = false) // ★一意制約とNOT NULLを追加
     private String word;
     
-    public SearchWords(){}
-    public SearchWords(int id, String word) {
+    public SearchWord(){}
+    public SearchWord(int id, String word) {
         this.id = id;
         this.word = word;
     }
