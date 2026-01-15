@@ -1,10 +1,16 @@
 package tracker.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table (name = "posts")
@@ -24,15 +30,22 @@ public class Post {
     private int repostCount;
     private int likeCount;
     private int quoteCount;
+    @Column(name = "author_id") // 明示的に物理カラム名を指定
     private int authorId; // INTEGER (外部キー) に対応
 
-    
-    
+    @ManyToOne
+    @JoinColumn(name = "author_id", insertable = false, updatable = false)
+    private User author;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<PostTag> tags; // タグ一覧も自動で取れるようになります
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<PostSearchResults> searchWordRelations;
+
     public Post(){};
-    public Post(int id, String uri, String cid, String text, String createdAt, 
-        String indexedAt, String language,
-        int bookmarkCount, int replyCount, int repostCount, int likeCount, int quoteCount,
-        int authorId){
+    public Post(int id, String uri, String cid, String text, String createdAt, String indexedAt, String language,
+        int bookmarkCount, int replyCount, int repostCount, int likeCount, int quoteCount, int authorId){
             this.id = id;
             this.uri = uri;
             this.cid = cid;
@@ -86,4 +99,21 @@ public class Post {
 
     public int getAuthorId() {return authorId;}
     public void setAuthorId(int authorId) {this.authorId = authorId;}
+
+    public User getAuthor() {return author;}
+    public void setAuthor(User author) {this.author = author;}
+
+    public List<PostTag> getTags() {
+    return tags;
+    }
+    public void setTags(List<PostTag> tags) {
+        this.tags = tags;
+    }
+
+    public List<PostSearchResults> getSearchWordRelations() {
+        return searchWordRelations;
+    }
+    public void setSearchWordRelations(List<PostSearchResults> searchWordRelations) {
+        this.searchWordRelations = searchWordRelations;
+    }
 }
