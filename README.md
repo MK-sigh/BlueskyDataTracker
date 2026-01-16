@@ -169,6 +169,8 @@ PostRepository|DB操作|SpringDataJPAを利用した、Postエンティティに
 各Json (AuthorJson等)|APIモデル|BlueskyAPIの階層深いJSON構造をマッピングするための受取用クラス群。
 app.py (Python)|分析|収集済みデータに対して統計や分析処理を行う。
 
+
+
 ![結果グラフ](images/01555.png)
 
 ## 今後の目標
