@@ -21,15 +21,15 @@ public class TestController {
 
     // ブラウザから http://localhost:8080/api/v1/test/fetch?q=キーワード で呼び出せる
     @GetMapping("/fetch")
-    public String testFetch(@RequestParam() String q) {
+    public String testFetch(@RequestParam() String query) {
         try {
             // 1. APIから取得
-            String json = apiClient.fetchFeedJson(q, null);
+            String json = apiClient.fetchFeedJson(query, null);
             
             // 2. DBへ保存（既存のプロセッサを使用）
-            dataProcessor.processFeed(json);
+            dataProcessor.processFeed(json, query);
             
-            return "成功！キーワード 「" + q + "」 のデータを取得し、DBに保存しました。";
+            return "成功！キーワード 「" + query + "」 のデータを取得し、DBに保存しました。";
         } catch (Exception e) {
             return "エラーが発生しました: " + e.getMessage();
         }

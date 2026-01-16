@@ -1,4 +1,7 @@
 package tracker.processor;
+import jakarta.transaction.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -8,11 +11,15 @@ import org.springframework.stereotype.Service;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import tracker.DAO.PostDAO;
+import tracker.DAO.PostSearchResultsDAO;
 import tracker.DAO.PostTagDAO;
+import tracker.DAO.SearchWordDAO;
 import tracker.DAO.TagDAO;
 import tracker.DAO.UserDAO;
 import tracker.model.Post;
+import tracker.model.PostSearchResults;
 import tracker.model.PostTag;
+import tracker.model.SearchWord;
 import tracker.model.Tag;
 import tracker.model.User;
 import tracker.processor.api_model.FeedResponse;
@@ -25,19 +32,33 @@ public class BlueskyDataProcessor {
     private final PostDAO postDao;
     private final TagDAO tagDao;
     private final PostTagDAO postTagDao;
+    private final SearchWordDAO searchWordDAO;
+    private final PostSearchResultsDAO postSearchResultsDAO;
     private final ObjectMapper objectMapper;
     
     public BlueskyDataProcessor(UserDAO userDao, PostDAO postDao,
-        TagDAO tagDao, PostTagDAO postTagDao,
-         ObjectMapper objectMapper){
+        TagDAO tagDao, PostTagDAO postTagDao, SearchWordDAO searchWordDAO,
+        PostSearchResultsDAO postSearchResultsDAO, ObjectMapper objectMapper){
         this.userDao = userDao;
         this.postDao = postDao;
         this.tagDao = tagDao; 
         this.postTagDao = postTagDao; 
+        this.searchWordDAO = searchWordDAO;
+        this.postSearchResultsDAO = postSearchResultsDAO;
         this.objectMapper = objectMapper;
     }
     
-    public String processFeed (String jsonText){
+    @Transactional
+    public String processFeed (String jsonText, String query){
+        // 検索語テーブル(search_words)のIDを確定させる
+
+        SearchWord newWord = searchWordDAO.findByWord(query)
+        .orElseGet(() -> {
+            SearchWord word = new SearchWord();
+            word.setWord(query); // クエリをセットする
+            return searchWordDAO.save(word); // 保存してその結果を返す
+        });
+        
         try{
             User authorUser;
             // 1. JSONパース
@@ -130,8 +151,9 @@ public class BlueskyDataProcessor {
                 
                 // 重複チェック
                 Optional<Post> existingPost = postDao.findByUri(uri);
+                Post savedPost; // 紐付け対象のポストを保持する変数
                 if (existingPost.isEmpty()) {
-                    Post savedPost = postDao.save(newPost); // ★saveの戻り値を受け取る(IDが入っている)
+                    savedPost = postDao.save(newPost); // ★saveの戻り値を受け取る(IDが入っている)
                     System.out.println("Saved post: " + text);
 
                     // 1. テキストからタグ文字列のリストを抽出
@@ -158,7 +180,21 @@ public class BlueskyDataProcessor {
                     }
                     // ==========================================
                 } else {
+                    savedPost = existingPost.get();
                 }
+                //検索結果としての紐付けを保存
+                LocalDateTime fetchedAt = LocalDateTime.now(); // 現在時刻をセット
+                PostSearchResults result =
+                    new PostSearchResults(newWord.getId(), savedPost.getId(), fetchedAt);
+                    // 保存前に、すでに同じ「キーワードID」と「ポストID」の組み合わせがないか確認
+                    boolean exists =
+                        postSearchResultsDAO.existsBySearchWordIdAndPostId
+                            (newWord.getId(), savedPost.getId());
+                    if (!exists) {
+                        postSearchResultsDAO.save(result);
+                    } else {
+                        System.out.println("Skip: Already linked.");
+                    }
             }
             return response.getCursor();
         } catch(JacksonException e){
