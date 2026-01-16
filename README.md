@@ -9,9 +9,9 @@ Blueskyから特定のキーワードを含む投稿を自動・手動で収集�
 
 ## 📋 プロジェクト概要
 
-このシステムは、Bluesky API（AT Protocol）を利用して、Java (Spring Boot) でデータを収集・蓄積し、Python (Streamlit) で直感的なデータ分析・可視化を行います。
-単なるテキストの保存だけでなく、ユーザー情報、投稿統計（いいね数、リポスト数など）、ハッシュタグをリレーショナルデータベースに正規化して保存します。
-また、**「追跡したい検索語（Search Word）」と、「投稿に含まれる自然なタグ（Tag）」**を分けて管理することで、精度の高いトレンド分析を可能にしています。
+このシステムは、Bluesky API（AT Protocol）を利用して、Java (Spring Boot) でデータを収集・蓄積し、Python (Streamlit) で直感的なデータ分析・可視化を行います。  
+単なるテキストの保存だけでなく、ユーザー情報、投稿統計（いいね数、リポスト数など）、ハッシュタグをリレーショナルデータベースに正規化して保存します。  
+また、 **「追跡したい検索語（Search Word）」** と、 **「投稿に含まれる自然なタグ（Tag）」** を分けて管理することで、精度の高いトレンド分析を可能にしています。
 
 ### 主な機能
 - **自動定期実行**: `Spring Scheduling` により、5分間隔で自動的にAPIをポーリングします。
@@ -145,9 +145,6 @@ streamlit run app.py
 POST|/api/v1/collector/run?q={word}|指定したワードで収集を実行しDBに保存。
 GET|/api/v1/collector/search?q={word}|DB内から指定ワードに関連する投稿を抽出して返す。
 
-```
-./mvnw spring-boot:run
-```
 
 ## 🛠 コンポーネント解説
 
@@ -157,7 +154,7 @@ BlueskyTrackerApplication|起動設定|Spring Bootアプリケーションの起
 BlueskyApiClient|通信|Bluesky APIへアクセスし、投稿データの取得を担うクライアント。
 CollectorController|制御|データ収集処理を外部から呼び出すためのAPIコントローラ。
 FeedScheduler|自動実行|指定した時間間隔でデータ取得を自動的に実行するスケジューラ。
-BlueskyDataProcessor|整形APIの|レスポンス（JSON）を解析し、DB保存用モデルに詰め替える。
+BlueskyDataProcessor|整形|APIのレスポンス（JSON）を解析し、DB保存用モデルに詰め替える。
 Post / User / Tag|モデル|投稿、ユーザー、ハッシュタグの基本情報を保持するエンティティ。
 SearchWord|モデル|データ収集の対象となる検索ワードを管理するエンティティ。
 PostTag|モデル|投稿(Post)とタグ(Tag)を紐付ける中間モデル。
