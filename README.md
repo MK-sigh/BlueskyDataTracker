@@ -1,6 +1,8 @@
 # Bluesky Data Tracker
 
-Blueskyから特定のキーワードを含む投稿を自動・手動で収集し、時系列分析やタグの傾向を可視化するためのフルスタック・データ分析システムです。
+Blueskyから特定のキーワードを含む投稿を自動・手動で収集し、時系列分析やタグの傾向を可視化するための
+Java(Spring Boot) + PostgreSQL + REST API + Python UI を用いたSNS投稿収集・分析Webアプリケーションです。
+実務を想定した「定期実行・差分取得・正規化DB設計・API提供」まで一貫して実装しています。
 
 ![検索画面](images/073602.png)
 
@@ -48,85 +50,7 @@ Blueskyから特定のキーワードを含む投稿を自動・手動で収集�
 5.  **search_words**: システムが追跡している検索キーワードのマスター。
 6.  **post_search_results**: キーワードと投稿を紐付ける中間テーブル。データ取得日時を保持する。
 
-## 🚀 セットアップと実行
-
-### 1. データベースの準備
-SQLなどで以下の構造を持つデータベースを作成してください。JPAの `hibernate.ddl-auto` を設定している場合は、エンティティから自動生成も可能です。
-```
-create table users (
-  id serial not null
-  , did character varying(255) not null
-  , handle character varying(255) not null
-  , display_name character varying(255)
-  , created_account_at character varying(255)
-  , primary key (id)
-);
-```
-```
-create table posts (
-  id serial not null
-  , text text not null
-  , created_at character varying(255) not null
-  , author_id integer
-  , language character varying(255) not null
-  , cid character varying(255) not null
-  , indexed_at character varying(255) not null
-  , like_count integer not null
-  , reply_count integer not null
-  , repost_count integer not null
-  , uri character varying(255)
-  , bookmark_count integer not null
-  , quote_count integer not null
-  , primary key (id)
-  , foreign key (author_id) references users(id)
-);
-```
-```
-create table tags (
-  id serial not null
-  , tag character varying(255) not null
-  , primary key (id)
-);
-```
-```
-create table post_tags (
-  post_id integer not null
-  , tag_id integer not null
-  , primary key (post_id, tag_id)
-  , foreign key (post_id) references posts(id) on delete cascade
-  , foreign key (tag_id) references tags(id) on delete cascade
-);
-```
-```
-create table search_words (
-  id serial primary key
-  , word character varying(255) not null unique
-);
-```
-```
-create table post_search_results (
-  id serial not null
-  , post_id integer not null,
-  , search_word_id integer not null,
-  , fetched_at timestamp not null,
-  , primary key (search_word_id, post_id)
-  , foreign key (posts_id) references posts(id) on delete cascade
-  , foreign key (word_id) references search_words(id) on delete cascade
-);
-```
-
-### 2. 設定の変更
-`.env` にデータベース接続情報を記述します。
-```
-# 接続先のURL（データベース名などを指定）
-DATABASE_URL = jdbc:postgresql://localhost:5432/your_database
-# ユーザー名
-DATABASE_USER = your_username
-# パスワード
-DATABASE_PASSWORD = password
-```
-
-### 3. ビルドと実行
+## 🚀  ビルドと実行
 1. Java バックエンドの起動
 ```
 /mvnw spring-boot:run
